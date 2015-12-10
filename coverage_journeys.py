@@ -28,8 +28,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 3:
         raise SystemExit("Missing arguments. Usage: " + sys.argv[0] + " <date> <source_root>")
 
-    treatment_day = datetime.strptime(sys.argv[1], '%Y-%m-%d').date()
-    source_root = sys.argv[2]
+    source_root = sys.argv[1]
+    treatment_day = datetime.strptime(sys.argv[2], '%Y-%m-%d').date()
     #source_root = '/home/vlepot/dev/navitia-stat-logger/tmp'
     #source_root = 'gs://hdp_test'
 
