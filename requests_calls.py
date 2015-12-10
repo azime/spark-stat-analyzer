@@ -22,12 +22,13 @@ def get_tuples_from_stat_dict(statDict):
                         statDict['application_name'],  # app_name
                         1 if 'canaltp.fr' in statDict['user_name'] else 0,  # is_internal_call
                         datetime.utcfromtimestamp(statDict['request_date']).date(),  # request_date
-                        statDict['end_point_id']  # end_point_id
+                        statDict['end_point_id'] if 'end_point_id' in statDict else '',  # end_point_id
+                        statDict['host']
                     ),
                     (
                         1,  # nb
                         1 if not 'journeys' in statDict or len(statDict['journeys']) == 0 else 0,  # nb_without_journey
-                        0   # TODO: object_count
+                        statDict['info_response']['object_count'] if 'info_response' in statDict and 'object_count' in statDict['info_response'] else 0
                     )
                 )
             )
@@ -79,8 +80,8 @@ if __name__ == "__main__":
 
     # Store on FS
 
-    compiled_storage_rootdir = source_root + "/compiled/" + treatment_day.strftime('%Y/%m/%d')
-    compiled_storage_dir = compiled_storage_rootdir + "/request_calls_" + treatment_day.strftime('%Y%m%d')
+    compiled_storage_rootdir = source_root + "/compiled/" + treatment_day_start.strftime('%Y/%m/%d')
+    compiled_storage_dir = compiled_storage_rootdir + "/request_calls_" + treatment_day_start.strftime('%Y%m%d')
 
     if source_root.startswith('/'): # In case of local file system do some preparation first
         if os.path.isdir(compiled_storage_dir):
