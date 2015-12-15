@@ -55,12 +55,16 @@ if __name__ == "__main__":
 
     dayStats = statsLines.map(
         lambda stat: json.loads(stat)
+    ).filter(
+        lambda line: line["api"] == 'v1.journeys'
     )
 
     coverage_journeys = dayStats.flatMap(
         get_journey_count_from_stat_dict
     ).reduceByKey(
         lambda a, b: a+b
+    ).filter(
+        lambda item: item[1] > 0  # Only keep items where nb_journeys > 0
     ).map(
         lambda tuple_of_tuples: [str(element) for element in tuple_of_tuples[0]] + [str(tuple_of_tuples[1])]
     ).map(
