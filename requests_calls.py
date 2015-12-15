@@ -36,7 +36,7 @@ def get_tuples_from_stat_dict(statDict):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        raise SystemExit("Missing arguments. Usage: " + sys.argv[0] + " <date> <source_root>")
+        raise SystemExit("Missing arguments. Usage: " + sys.argv[0] + " <source_root> <start_date> <end_date> ")
 
     #treatment_day = datetime.strptime(sys.argv[1], '%Y-%m-%d').date()
     #source_root = '/home/vlepot/dev/navitia-stat-logger/tmp'
