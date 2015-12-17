@@ -28,7 +28,7 @@ def get_tuples_from_stat_dict(statDict):
                         statDict['application_name'],  # app_name
                         1 if 'canaltp' in statDict['user_name'] else 0,  # is_internal_call
                         datetime.utcfromtimestamp(statDict['request_date']).date(),  # request_date
-                        statDict['end_point_id'] if 'end_point_id' in statDict else 1,  # end_point_id
+                        statDict['end_point_id'] if 'end_point_id' in statDict and statDict['end_point_id'] != 0 else 1,  # end_point_id
                         statDict['host']
                     ),
                     (
