@@ -13,14 +13,20 @@ def get_tuples_from_stat_dict(statDict):
     result = []
     if len(statDict['coverages']) > 0:
         for cov in statDict['coverages']:
+            coverages = []
+            region_id = cov['region_id'] if 'region_id' in cov else ''
+            if not region_id in coverages:
+                coverages.append(region_id)
+
+        for cov in coverages:
             result.append(
                 (
                     (
-                        cov['region_id'] if 'region_id' in cov else '',  # region_id
+                        cov,  # region_id
                         statDict['api'],  # api
                         statDict['user_id'],  # user_id
                         statDict['application_name'],  # app_name
-                        1 if 'canaltp.fr' in statDict['user_name'] else 0,  # is_internal_call
+                        1 if 'canaltp' in statDict['user_name'] else 0,  # is_internal_call
                         datetime.utcfromtimestamp(statDict['request_date']).date(),  # request_date
                         statDict['end_point_id'] if 'end_point_id' in statDict else 1,  # end_point_id
                         statDict['host']

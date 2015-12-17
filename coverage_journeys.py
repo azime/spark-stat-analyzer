@@ -11,13 +11,19 @@ def get_journey_count_from_stat_dict(stat_dict):
     result = []
     if len(stat_dict['coverages']) > 0:
         for cov in stat_dict['coverages']:
-            if 'region_id' in cov:  # The empty coverages key is represented by [{}]
+            coverages = []
+            region_id = cov['region_id'] if 'region_id' in cov else ''
+            if not region_id in coverages:
+                coverages.append(region_id)
+
+        for cov in coverages:
+            if not '' == cov:  # The empty coverages key is represented by [{}]
                 result.append(
                     (
                         (
                             datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
-                            cov['region_id'],  # region_id
-                            1 if 'canaltp.fr' in stat_dict['user_name'] else 0,  # is_internal_call
+                            cov,  # region_id
+                            1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
                         ),
                         len(stat_dict['journeys']) if 'journeys' in stat_dict else 0,  # nb_journeys
                     )
