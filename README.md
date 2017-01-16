@@ -47,6 +47,6 @@ Launching 'spark-submit' command , if you get error :
 
     zsh: no matches found
     
-- you can replace in command line '--master=local[3]' by '--master=local'
+- you can replace in command line `--master=local[3]` by `--master='local[3]'` or `--master=local`
 - or use bash
 
