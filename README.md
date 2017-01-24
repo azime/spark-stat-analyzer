@@ -24,7 +24,7 @@ The files are json logs (one json per line). The files may be compressed using g
 
 * For requests_calls consolidation
 ```
-<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master=local[3] requests_calls.py <your_export_directory> <start_date> <end_date>
+<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master='local[3]' requests_calls.py <your_export_directory> <start_date> <end_date>
 ```
 
 where:
@@ -32,10 +32,20 @@ where:
 
 * For coverage_journeys consolidation
 ```
-<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master=local[3] coverage_journeys.py <your_export_directory> <start_date> <end_date>
+<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master='local[3]' coverage_journeys.py <your_export_directory> <start_date> <end_date>
 ```
 
 where:
 * start_date and end_date is in YYYY-MM-DD format
 
 Note that the results are stored in the export dir
+
+
+### Shell ZSH users
+
+Launching 'spark-submit' command , if you get error :
+
+    zsh: no matches found
+    
+You can replace in command line `--master='local[3]'` by `--master=local`, or use *bash*.
+
