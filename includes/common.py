@@ -39,28 +39,30 @@ def get_data_from_input(analyzer_name):
     )
     return (sc, statsLines, treatment_day_start, treatment_day_end)
 
+
 def get_elapsed_time(start):
     end = time()
     runtime = end - start
+    return math.floor(runtime)
 
-    minutes = int(math.floor(runtime / 60))
-    seconds = int(round(runtime - (minutes * 60)))
-    return (minutes, seconds)
 
 def terminate(sc):
     sc.stop()
+
 
 def get_db_connection_string():
     return "host='localhost' port='5432' dbname='statistics' user='statistics'"
     # return "host='par-vm147.srv.canaltp.fr' port='5432' dbname='statistics' user='statistics' password='aitivan'"
 
+
 def log_analyzer_stats(analyzer, treatment_day_start, treatment_day_end, start_time):
     if treatment_day_start == treatment_day_end:
-        (minutes, seconds) = get_elapsed_time(start_time)
+        duration = get_elapsed_time(start_time)
         print(
-            "[spark-stat-analyzer] [OK] [%s] [%s] [%s] [%dm%ds]" %
-            (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), treatment_day_start, analyzer, minutes, seconds)
+            "[spark-stat-analyzer] [OK] [%s] [%s] [%s] [%d]" %
+            (datetime.now().strftime("%Y-%m-%d %H:%M:%S"), treatment_day_start, analyzer, duration)
         )
+
 
 def insert_data_into_db(table_name, columns, rows):
     conn = psycopg2.connect(get_db_connection_string())
@@ -71,6 +73,7 @@ def insert_data_into_db(table_name, columns, rows):
     insertString = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
         table_name, columns_as_string, records_list_template
     )
+    # print(insertString)
     cur.execute(insertString, rows)
     cur.close()
     conn.commit()
