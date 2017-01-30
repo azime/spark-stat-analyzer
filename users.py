@@ -8,11 +8,13 @@ import psycopg2
 start = time()
 
 (source_root, treatment_day_start, treatment_day_end) = common.get_period_from_input()
-(spark, statLines) = common.load_rdd_data(__file__, source_root, treatment_day_start, treatment_day_end)
+spark = common.start_spark_session(__file__)
+file_list = common.get_file_list(source_root, treatment_day_start, treatment_day_end)
+statLines = common.load_rdd_data(spark, file_list)
 new_users = common.get_rdd_loaded_as_dict(statLines)
 
 new_users = new_users.map(
-    # keep usefull data
+    # keep useful data
     lambda dict: (dict['user_id'], dict['user_name'], dict['request_date'])
 ).map(
     # format to reduce by key
@@ -47,23 +49,21 @@ if len(new_users_newest_name) != 0:
                 updateString = """
                 UPDATE stat_compiled.users SET user_name=%s WHERE id=%s;
                 """
-                print(updateString)
-                print((user_name, user_id))
+                # print(updateString)
+                # print((user_name, user_id))
                 cur.execute(updateString, (user_name, user_id))
         else:
-            print("insert")
             insertString = """
             INSERT INTO stat_compiled.users (id, user_name, date_first_request)
             VALUES (%s, %s, %s);
             """
-            print(user_id, user_name, new_users_oldest_date[user_id])
-            print(insertString)
+            # print(user_id, user_name, new_users_oldest_date[user_id])
+            # print(insertString)
             cur.execute(insertString, (user_id, user_name, datetime.utcfromtimestamp(new_users_oldest_date[user_id])))
 
 
     cur.close()
     conn.commit()
     conn.close()
-    # print(rows)
-
+common.terminate(spark.sparkContext)
 common.log_analyzer_stats("CanalTP\StatCompiler\Updater\UsersUpdater", treatment_day_start, treatment_day_end, start)
