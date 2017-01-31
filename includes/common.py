@@ -95,21 +95,33 @@ def truncate_table_for_dates(table_name, period_dates, date_column_name="request
         table_name, date_column_name, period_dates[0], period_dates[1]
     ))
     cur.close()
-    conn.commit()
-    conn.close()
+    return conn
 
-def insert_data_into_db(table_name, columns, rows):
-    conn = psycopg2.connect(get_db_connection_string())
+
+def insert_data_into_db(table_name, columns, rows, conn=None):
+    if conn is None:
+        conn = psycopg2.connect(get_db_connection_string())
+
     cur = conn.cursor()
 
     columns_as_string = ", ".join(columns)
     records_list_template = ','.join(['%s'] * len(rows))
-    insertString = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
+    insert_string = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
         table_name, columns_as_string, records_list_template
     )
-    # print(insertString)
+    # print(insert_string)
     # print(rows)
-    cur.execute(insertString, rows)
+    try:
+        cur.execute(insert_string, rows)
+        conn.commit()
+    except psycopg2.Error as e:
+        conn.rollback()
+        print("""
+ERROR: Unable to insert into table %s (%s) rows:
+%s
+Exception:
+%s
+        """ % (table_name, columns_as_string, rows, e))
     cur.close()
-    conn.commit()
     conn.close()
+

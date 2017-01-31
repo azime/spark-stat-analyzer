@@ -20,8 +20,8 @@ tokenStats = tokenStats.collect()
 tokenStats = [(tokenRow['token'], tokenRow['request_date_trunc'], tokenRow['count']) for tokenRow in tokenStats]
 
 if len(tokenStats) != 0:
-    common.truncate_table_for_dates("token_stats", (treatment_day_start, treatment_day_end))
-    common.insert_data_into_db("token_stats", ["token", "request_date", "nb_req"], tokenStats)
+    conn = common.truncate_table_for_dates("token_stats", (treatment_day_start, treatment_day_end))
+    common.insert_data_into_db("token_stats", ["token", "request_date", "nb_req"], tokenStats, conn)
 
 common.terminate(spark.sparkContext)
 common.log_analyzer_stats("CanalTP\StatCompiler\Updater\TokenStatsUpdater", treatment_day_start, treatment_day_end, start)
