@@ -88,6 +88,16 @@ def log_analyzer_stats(analyzer, treatment_day_start, treatment_day_end, start_t
         )
 
 
+def truncate_table_for_dates(table_name, period_dates, date_column_name="request_date"):
+    conn = psycopg2.connect(get_db_connection_string())
+    cur = conn.cursor()
+    cur.execute("DELETE from stat_compiled.{0} where {1} >= ('{2}' :: date) and {1} < ('{3}' :: date) + interval '1 day'".format(
+        table_name, date_column_name, period_dates[0], period_dates[1]
+    ))
+    cur.close()
+    conn.commit()
+    conn.close()
+
 def insert_data_into_db(table_name, columns, rows):
     conn = psycopg2.connect(get_db_connection_string())
     cur = conn.cursor()
@@ -98,6 +108,7 @@ def insert_data_into_db(table_name, columns, rows):
         table_name, columns_as_string, records_list_template
     )
     # print(insertString)
+    # print(rows)
     cur.execute(insertString, rows)
     cur.close()
     conn.commit()
