@@ -2,7 +2,6 @@ import sys, os
 sys.path.append(os.path.abspath("includes"))
 from time import time
 from includes import common
-import psycopg2
 from pyspark.sql.functions import when, from_unixtime, lit
 
 start = time()
