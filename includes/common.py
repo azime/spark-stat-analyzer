@@ -7,6 +7,7 @@ from time import time
 import math
 import json
 import psycopg2
+import config
 
 def get_period_from_input():
     if len(sys.argv) < 3:
@@ -69,8 +70,13 @@ def terminate(sc):
 
 
 def get_db_connection_string():
-    return "host='localhost' port='5432' dbname='statistics' user='statistics'"
-    # return "host='par-vm147.srv.canaltp.fr' port='5432' dbname='statistics' user='statistics' password='aitivan'"
+    return "host='%s' port='%s' dbname='%s' user='%s' password='%s'" % (
+        config.db['host'],
+        config.db['port'],
+        config.db['dbname'],
+        config.db['user'],
+        config.db['password']
+    )
 
 
 def log_analyzer_stats(analyzer, treatment_day_start, treatment_day_end, start_time):
