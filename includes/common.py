@@ -88,17 +88,40 @@ def log_analyzer_stats(analyzer, treatment_day_start, treatment_day_end, start_t
         )
 
 
-def insert_data_into_db(table_name, columns, rows):
+def truncate_table_for_dates(table_name, period_dates, date_column_name="request_date"):
     conn = psycopg2.connect(get_db_connection_string())
+    cur = conn.cursor()
+    cur.execute("DELETE from stat_compiled.{0} where {1} >= ('{2}' :: date) and {1} < ('{3}' :: date) + interval '1 day'".format(
+        table_name, date_column_name, period_dates[0], period_dates[1]
+    ))
+    cur.close()
+    return conn
+
+
+def insert_data_into_db(table_name, columns, rows, conn=None):
+    if conn is None:
+        conn = psycopg2.connect(get_db_connection_string())
+
     cur = conn.cursor()
 
     columns_as_string = ", ".join(columns)
     records_list_template = ','.join(['%s'] * len(rows))
-    insertString = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
+    insert_string = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
         table_name, columns_as_string, records_list_template
     )
-    # print(insertString)
-    cur.execute(insertString, rows)
+    # print(insert_string)
+    # print(rows)
+    try:
+        cur.execute(insert_string, rows)
+        conn.commit()
+    except psycopg2.Error as e:
+        conn.rollback()
+        print("""
+ERROR: Unable to insert into table %s (%s) rows:
+%s
+Exception:
+%s
+        """ % (table_name, columns_as_string, rows, e))
     cur.close()
-    conn.commit()
     conn.close()
+
