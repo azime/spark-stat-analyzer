@@ -20,10 +20,10 @@ requests_calls = df.select(
     when(df.user_name == 'canaltp', 1).otherwise(0).alias('is_internal_call'),
     from_unixtime(df.request_date, 'yyyy-MM-dd').alias('request_date'),
     when(df.end_point_id.isNull() , 1).when(df.end_point_id == 0, 1).otherwise(df.end_point_id).alias('end_point_id'),
-    when(df.journeys.isNull(), 1).otherwise(0).alias('n_w_j'),
-    when(df.info_response.isNull(), 0).otherwise(when(df.info_response.object_count.isNull(), 0).otherwise(df.info_response.object_count)).alias('o_c'),
+    when(df.journeys.isNull(), 1).otherwise(0).alias('nb_without_journey'),
+    when(df.info_response.isNull(), 0).otherwise(when(df.info_response.object_count.isNull(), 0).otherwise(df.info_response.object_count)).alias('object_count'),
 ).withColumn("nb", lit(1))\
-    .groupBy("region_id", "api", "user_id", "application_name", "is_internal_call", "request_date", "end_point_id").agg({"nb": "sum", "n_w_j": "sum", "o_c": "sum"})
+    .groupBy("region_id", "api", "user_id", "application_name", "is_internal_call", "request_date", "end_point_id").agg({"nb": "sum", "nb_without_journey": "sum", "object_count": "sum"})
 
 #DB insert
 conn = psycopg2.connect(common.get_db_connection_string())
@@ -46,7 +46,7 @@ sql_query_fmt = """
     """
 
 for requests_calls_row in requests_calls.collect():
-    insert_cur.execute(sql_query_fmt, (requests_calls_row.region_id, requests_calls_row.api, requests_calls_row.user_id, requests_calls_row.application_name, requests_calls_row.is_internal_call, requests_calls_row.request_date, requests_calls_row.end_point_id, requests_calls_row["sum(nb)"], requests_calls_row["sum(n_w_j)"], requests_calls_row["sum(o_c)"]))
+    insert_cur.execute(sql_query_fmt, (requests_calls_row.region_id, requests_calls_row.api, requests_calls_row.user_id, requests_calls_row.application_name, requests_calls_row.is_internal_call, requests_calls_row.request_date, requests_calls_row.end_point_id, requests_calls_row["sum(nb)"], requests_calls_row["sum(nb_without_journey)"], requests_calls_row["sum(object_count)"]))
 conn.commit()
 insert_cur.close()
 conn.close()
