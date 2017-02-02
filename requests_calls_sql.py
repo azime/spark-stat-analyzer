@@ -17,7 +17,7 @@ requests_calls = df.select(
     df.api,
     df.user_id,
     df.application_name,
-    when(df.user_name == 'canaltp', 1).otherwise(0).alias('is_internal_call'),
+    when(df.user_name.like('%canaltp%'), 1).otherwise(0).alias('is_internal_call'),
     from_unixtime(df.request_date, 'yyyy-MM-dd').alias('request_date'),
     when(df.end_point_id.isNull() , 1).when(df.end_point_id == 0, 1).otherwise(df.end_point_id).alias('end_point_id'),
     when(df.journeys.isNull(), 1).otherwise(0).alias('nb_without_journey'),
