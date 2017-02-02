@@ -1,13 +1,9 @@
-from pyspark import SparkContext, SparkConf
-import json
-from datetime import datetime, timedelta
-import sys
-#import psycopg2
-import calendar
-import os
-import shutil
-from glob import glob
-
+import sys, os
+sys.path.append(os.path.abspath("includes"))
+from datetime import datetime
+from time import time
+from includes import common
+import psycopg2
 
 def get_tuples_from_stat_dict(statDict):
     result = []
@@ -29,7 +25,6 @@ def get_tuples_from_stat_dict(statDict):
                         1 if 'canaltp' in statDict['user_name'] else 0,  # is_internal_call
                         datetime.utcfromtimestamp(statDict['request_date']).date(),  # request_date
                         statDict['end_point_id'] if 'end_point_id' in statDict and statDict['end_point_id'] != 0 else 1,  # end_point_id
-                        statDict['host']
                     ),
                     (
                         1,  # nb
@@ -40,93 +35,49 @@ def get_tuples_from_stat_dict(statDict):
             )
     return result
 
-if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        raise SystemExit("Missing arguments. Usage: " + sys.argv[0] + " <source_root> <start_date> <end_date> ")
+start = time()
 
-    #treatment_day = datetime.strptime(sys.argv[1], '%Y-%m-%d').date()
-    #source_root = '/home/vlepot/dev/navitia-stat-logger/tmp'
-    #source_root = 'gs://hdp_test'
+(source_root, treatment_day_start, treatment_day_end) = common.get_period_from_input()
+spark = common.start_spark_session(__file__)
+file_list = common.get_file_list(source_root, treatment_day_start, treatment_day_end)
+statLines = common.load_rdd_data(spark, file_list)
+dayStats = common.get_rdd_loaded_as_dict(statLines)
+requests_calls = dayStats.flatMap(
+    get_tuples_from_stat_dict
+).reduceByKey(
+    lambda (a, b, c), (d, e, f): (a+d, b+e, c+f)
+).map(
+    lambda tuple_of_tuples: [str(element) for tupl in tuple_of_tuples for element in tupl]
+).map(
+    lambda line: ";".join(line)
+)
 
-    source_root = sys.argv[1]
-    treatment_day_start = datetime.strptime(sys.argv[2], '%Y-%m-%d').date()
-    treatment_day_end = datetime.strptime(sys.argv[3], '%Y-%m-%d').date()
 
-    print "Go for dates: " + treatment_day_start.strftime('%Y-%m-%d') + " -> " + treatment_day_end.strftime('%Y-%m-%d')
-    print "Source root dir: " + source_root
+# DB insert
 
-    conf = SparkConf().setAppName("requests_calls_compiler")
-    sc = SparkContext(conf=conf)
-
-    statsLines = sc.emptyRDD()
-    treatment_day = treatment_day_start
-    while treatment_day <= treatment_day_end:
-        if source_root.startswith("/") and len(glob(source_root + '/' + treatment_day.strftime('%Y/%m/%d') + '/*.json.log*')) > 0:
-            statsLines = statsLines.union(sc.textFile(source_root + '/' + treatment_day.strftime('%Y/%m/%d') + '/*.json.log*'))
-        treatment_day += timedelta(days=1)
-
-    dayStats = statsLines.map(
-        lambda stat: json.loads(stat)
+def insert_requests_calls(cursor, line):
+    sql_query_fmt = """
+    INSERT INTO stat_compiled.requests_calls
+    (
+        region_id, api, user_id, app_name, is_internal_call, request_date,
+        end_point_id, nb, nb_without_journey, object_count
     )
-
-    # print dayStats.first()
-    # print dayStats.count()
-
-    requests_calls = dayStats.flatMap(
-        get_tuples_from_stat_dict
-    ).reduceByKey(
-        lambda (a, b, c), (d, e, f): (a+d, b+e, c+f)
-    ).map(
-        lambda tuple_of_tuples: [str(element) for tupl in tuple_of_tuples for element in tupl]
-    ).map(
-        lambda line: ";".join(line)
+    VALUES
+    (
+        %s, %s, %s, %s, %s, %s,
+        %s, %s, %s, %s
     )
-
-    # print requests_calls.count()
-
-    # Store on FS
-
-    compiled_storage_rootdir = source_root + "/compiled/" + treatment_day_start.strftime('%Y/%m/%d')
-    compiled_storage_dir = compiled_storage_rootdir + "/request_calls_" + treatment_day_start.strftime('%Y%m%d')
-
-    if source_root.startswith('/'): # In case of local file system do some preparation first
-        if os.path.isdir(compiled_storage_dir):
-            shutil.rmtree(compiled_storage_dir)
-        else:
-            if not os.path.isdir(compiled_storage_rootdir):
-                os.makedirs(compiled_storage_rootdir)
-
-    requests_calls.saveAsTextFile(compiled_storage_dir)
-
-    # DB insert
-
-    #
-    # def insert_requests_calls(cursor, line):
-    #     sql_query_fmt = """
-    #     INSERT INTO stat_compiled.requests_calls
-    #     (
-    #         region_id, api, user_id, app_name, is_internal_call, request_date,
-    #         nb, nb_without_journey, end_point_id, object_count
-    #     )
-    #     VALUES
-    #     (
-    #         %s, %s, %s, %s, %s, %s,
-    #         %s, %s, %s, %s
-    #     )
-    #     """
-    #     cursor.execute(sql_query_fmt, line)
-    #
-    # conn_string = "host='statdb.docker' port='5432' dbname='statistics' user='stat_compiled' password='stat_compiled'"
-    # conn = psycopg2.connect(conn_string)
-    #
-    # cur = conn.cursor()
-    # cur.execute("DELETE FROM stat_compiled.requests_calls WHERE request_date = %s", (treatment_day,))
-    # cur.close()
-    #
-    # insert_cur = conn.cursor()
-    # for requests_calls_line in requests_calls.collect():
-    #     insert_requests_calls(insert_cur, requests_calls_line)
-    #
-    # conn.commit()
-    # insert_cur.close()
-    # conn.close()
+    """
+    cursor.execute(sql_query_fmt, line.split(';'))
+conn = psycopg2.connect(common.get_db_connection_string())
+cur = conn.cursor()
+cur.execute("DELETE FROM stat_compiled.requests_calls WHERE request_date >= %s AND request_date <= %s", (treatment_day_start, treatment_day_end))
+cur.close()
+insert_cur = conn.cursor()
+for requests_calls_line in requests_calls.collect():
+    insert_requests_calls(insert_cur, requests_calls_line)
+conn.commit()
+insert_cur.close()
+conn.close()
+common.terminate(spark.sparkContext)
+common.log_analyzer_stats("CanalTP\StatCompiler\Updater\RequestCallsUpdater", treatment_day_start, treatment_day_end, start)
