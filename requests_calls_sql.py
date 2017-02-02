@@ -25,30 +25,25 @@ requests_calls = df.select(
 ).withColumn("nb", lit(1))\
     .groupBy("region_id", "api", "user_id", "application_name", "is_internal_call", "request_date", "end_point_id").agg({"nb": "sum", "nb_without_journey": "sum", "object_count": "sum"})
 
+requests_calls_collection = requests_calls.collect()
+request_calls_array = [(
+                        requests_calls_row.region_id,
+                        requests_calls_row.api,
+                        requests_calls_row.user_id,
+                        requests_calls_row.application_name,
+                        requests_calls_row.is_internal_call,
+                        requests_calls_row.request_date,
+                        requests_calls_row.end_point_id,
+                        requests_calls_row["sum(nb)"],
+                        requests_calls_row["sum(nb_without_journey)"],
+                        requests_calls_row["sum(object_count)"]
+                       ) for requests_calls_row in requests_calls_collection ]
+
 #DB insert
-conn = psycopg2.connect(common.get_db_connection_string())
-cur = conn.cursor()
-cur.execute("DELETE FROM stat_compiled.requests_calls WHERE request_date >= %s AND request_date <= %s", (treatment_day_start, treatment_day_end))
-cur.close()
-insert_cur = conn.cursor()
+if len(request_calls_array) != 0:
+    conn = common.truncate_table_for_dates("requests_calls", (treatment_day_start, treatment_day_end))
+    table_cols = ["region_id", "api", "user_id", "app_name", "is_internal_call", "request_date", "end_point_id", "nb", "nb_without_journey", "object_count"]
+    common.insert_data_into_db("requests_calls", table_cols, request_calls_array, conn)
 
-sql_query_fmt = """
-    INSERT INTO stat_compiled.requests_calls
-    (
-        region_id, api, user_id, app_name, is_internal_call, request_date,
-        end_point_id, nb, nb_without_journey, object_count
-    )
-    VALUES
-    (
-        %s, %s, %s, %s, %s, %s,
-        %s, %s, %s, %s
-    )
-    """
-
-for requests_calls_row in requests_calls.collect():
-    insert_cur.execute(sql_query_fmt, (requests_calls_row.region_id, requests_calls_row.api, requests_calls_row.user_id, requests_calls_row.application_name, requests_calls_row.is_internal_call, requests_calls_row.request_date, requests_calls_row.end_point_id, requests_calls_row["sum(nb)"], requests_calls_row["sum(nb_without_journey)"], requests_calls_row["sum(object_count)"]))
-conn.commit()
-insert_cur.close()
-conn.close()
 common.terminate(spark.sparkContext)
 common.log_analyzer_stats("CanalTP\StatCompiler\Updater\RequestCallsUpdater", treatment_day_start, treatment_day_end, start)
