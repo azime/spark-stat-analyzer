@@ -1,0 +1,9 @@
+import os
+
+db = dict(
+    host = os.getenv('STAT_DATABASE_HOST', 'localhost'),
+    port = os.getenv('STAT_DATABASE_PORT', '5432'),
+    dbname = os.getenv('STAT_DATABASE_DBNAME', 'statistics'),
+    user = os.getenv('STAT_DATABASE_USER', 'statistics'),
+    password = os.getenv('STAT_DATABASE_PASSWORD', 'password'),
+)
