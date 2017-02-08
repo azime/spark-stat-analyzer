@@ -1,4 +1,4 @@
-FROM gettyimages/spark:2.0.2-hadoop-2.7
+FROM gettyimages/spark:2.1.0-hadoop-2.7
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get -yq install \
