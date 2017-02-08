@@ -51,3 +51,14 @@ Launching 'spark-submit' command , if you get error :
     
 You can replace in command line `--master='local[3]'` by `--master=local`, or use *bash*.
 
+## Tests
+
+To run tests, you can build your own image and launch them using:
+
+```
+docker build -f Dockerfile.test -t stat-analyser:test .
+docker run -e USER_ID=$(id -u) -it -v $(pwd):/srv/spark-stat-analyzer stat-analyser:test sh -c './run_test.sh'
+```
+
+The docker image is also hosted on our registry under the same name:tag
+
