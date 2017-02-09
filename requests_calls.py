@@ -1,5 +1,3 @@
-import sys, os
-sys.path.append(os.path.abspath("includes"))
 from datetime import datetime
 from time import time
 from includes import common

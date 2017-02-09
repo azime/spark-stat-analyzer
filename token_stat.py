@@ -1,5 +1,3 @@
-import sys, os
-sys.path.append(os.path.abspath("includes"))
 from time import time
 from includes import common
 from pyspark.sql.functions import to_date
@@ -8,7 +6,8 @@ def process(df):
     dfProcessed = df.withColumn('request_date_ts', df.request_date.cast('timestamp'))
     tokenStats = dfProcessed.groupBy(to_date('request_date_ts').alias('request_date_trunc'), 'token').count()
     tokenStats = tokenStats.collect()
-    # tokenRow attributes can be accessed by .token, .request_date_trunc but not .count which returns count method of tuple
+    # tokenRow attributes can be accessed by .token, .request_date_trunc
+    # but not .count which returns count method of tuple
     return [(tokenRow['token'], tokenRow['request_date_trunc'], tokenRow['count']) for tokenRow in tokenStats]
 
 if __name__ == "__main__":

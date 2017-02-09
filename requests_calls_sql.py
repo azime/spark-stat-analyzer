@@ -1,5 +1,3 @@
-import sys, os
-sys.path.append(os.path.abspath("includes"))
 from time import time
 from includes import common
 from pyspark.sql.functions import when, from_unixtime, lit
