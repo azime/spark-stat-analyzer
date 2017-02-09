@@ -1,5 +1,3 @@
-import sys, os
-sys.path.append(os.path.abspath("includes"))
 from datetime import datetime
 from time import time
 from includes import common
@@ -80,4 +78,4 @@ conn.commit()
 insert_cur.close()
 conn.close()
 common.terminate(spark.sparkContext)
-common.log_analyzer_stats("CanalTP\StatCompiler\Updater\RequestCallsUpdater", treatment_day_start, treatment_day_end, start)
+common.log_analyzer_stats("RequestCallsUpdater", treatment_day_start, treatment_day_end, start)
