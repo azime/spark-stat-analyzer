@@ -43,4 +43,4 @@ if len(request_calls_array) != 0:
     common.insert_data_into_db("requests_calls", table_cols, request_calls_array, conn)
 
 common.terminate(spark.sparkContext)
-common.log_analyzer_stats("CanalTP\StatCompiler\Updater\RequestCallsUpdater", treatment_day_start, treatment_day_end, start)
+common.log_analyzer_stats("RequestCallsUpdater", treatment_day_start, treatment_day_end, start)

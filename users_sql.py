@@ -60,4 +60,4 @@ if __name__ == "__main__":
         conn.commit()
         conn.close()
     common.terminate(spark.sparkContext)
-    common.log_analyzer_stats("CanalTP\StatCompiler\Updater\UsersUpdater", treatment_day_start, treatment_day_end, start)
+    common.log_analyzer_stats("UsersUpdater", treatment_day_start, treatment_day_end, start)
