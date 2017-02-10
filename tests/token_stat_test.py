@@ -1,15 +1,29 @@
 import pytest
 from datetime import date
-from includes import common
-import token_stat
+from analyzers.token_stat import AnalyzeToken
+import os
 
 pytestmark = pytest.mark.usefixtures("spark")
 
 
 def test_token_stat(spark):
-    file_list = 'tests/fixtures/token_stat.json.log'
-    df = common.get_sql_data_frame(spark, file_list)
-    results = token_stat.process(df)
+    path = os.getcwd() + "/tests/fixtures/token_stat"
+    start_date = date(2017, 1, 15)
+    end_date = date(2017, 1, 16)
+
+    tokenstat = AnalyzeToken(storage_path=path,
+                             start_date=start_date,
+                             end_date=end_date,
+                             spark_context=spark, database=None)
+
+    files = tokenstat.get_files_to_analyze()
+
+    expected_files = [path + '/2017/01/15/token_stat.json.log', path + '/2017/01/16/token_stat.json.log']
+
+    assert len(files) == len(expected_files)
+    assert len(set(files) - set(expected_files)) == 0
+
+    results = tokenstat.get_data()
     expected_results = [(u'token:2', date(2017, 1, 15), 1),
                         (u'token:2', date(2017, 1, 16), 1),
                         (u'token:3', date(2017, 1, 15), 6),

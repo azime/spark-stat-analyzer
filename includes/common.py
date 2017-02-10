@@ -9,6 +9,7 @@ import json
 import psycopg2
 import config
 
+
 def get_period_from_input():
     if len(sys.argv) < 3:
         raise SystemExit("Missing arguments. Usage: " + sys.argv[0] + " <source_root> <start_date> <end_date> ")
@@ -99,6 +100,7 @@ def truncate_table_for_dates(table_name, period_dates, date_column_name="request
 
 
 def insert_data_into_db(table_name, columns, rows, conn=None):
+
     if conn is None:
         conn = psycopg2.connect(get_db_connection_string())
 
@@ -109,8 +111,7 @@ def insert_data_into_db(table_name, columns, rows, conn=None):
     insert_string = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
         table_name, columns_as_string, records_list_template
     )
-    # print(insert_string)
-    # print(rows)
+
     try:
         cur.execute(insert_string, rows)
         conn.commit()
