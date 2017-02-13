@@ -26,10 +26,12 @@ Create config.py file from template config.py.dist and adapt them
 
 * For requests_calls consolidation
 ```
-<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master='local[3]' requests_calls.py <your_export_directory> <start_date> <end_date>
+<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master='local[3]' manage.py -a <analyzer> -i <your_export_directory> -s <start_date> -e <end_date>
 ```
 
 where:
+* analyzer: analyzer name, possible value : token_stat, users_sql
+
 * start_date and end_date is in YYYY-MM-DD format
 
 * For coverage_journeys consolidation
