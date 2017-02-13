@@ -7,19 +7,22 @@ from analyzers.analyzer import Analyzer
 class AnalyseUsersSql(Analyzer):
 
     def prepare_data(self, dataframe):
-        parition_by_user_id = Window.partitionBy("user_id")
-        wasc = parition_by_user_id.orderBy("request_date")
-        wdesc = parition_by_user_id.orderBy(desc("request_date"))
+        if dataframe.count():
+            parition_by_user_id = Window.partitionBy("user_id")
+            wasc = parition_by_user_id.orderBy("request_date")
+            wdesc = parition_by_user_id.orderBy(desc("request_date"))
 
-        new_users = dataframe \
-            .select(
-                "user_id",
-                first('user_name').over(wdesc).alias('last_user_name'),
-                first('request_date').over(wasc).alias('first_date')
-            ) \
-            .distinct()
+            new_users = dataframe \
+                .select(
+                    "user_id",
+                    first('user_name').over(wdesc).alias('last_user_name'),
+                    first('request_date').over(wasc).alias('first_date')
+                ) \
+                .distinct()
 
-        return new_users.collect()
+            return new_users.collect()
+        else:
+            return []
 
     def get_data(self):
         files = self.get_files_to_analyze()

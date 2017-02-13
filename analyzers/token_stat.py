@@ -5,11 +5,14 @@ from analyzer import Analyzer
 class AnalyzeToken(Analyzer):
 
     def prepare_data(self, dataframe):
-        dfProcessed = dataframe.withColumn('request_date_ts', dataframe.request_date.cast('timestamp'))
-        tokenStats = dfProcessed.groupBy(to_date('request_date_ts').alias('request_date_trunc'), 'token').count()
-        tokenStats = tokenStats.collect()
-        # tokenRow attributes can be accessed by .token, .request_date_trunc but not .count which returns count method of tuple
-        return [(tokenRow['token'], tokenRow['request_date_trunc'], tokenRow['count']) for tokenRow in tokenStats]
+        if dataframe.count():
+            dfProcessed = dataframe.withColumn('request_date_ts', dataframe.request_date.cast('timestamp'))
+            tokenStats = dfProcessed.groupBy(to_date('request_date_ts').alias('request_date_trunc'), 'token').count()
+            tokenStats = tokenStats.collect()
+            # tokenRow attributes can be accessed by .token, .request_date_trunc but not .count which returns count method of tuple
+            return [(tokenRow['token'], tokenRow['request_date_trunc'], tokenRow['count']) for tokenRow in tokenStats]
+        else:
+            return []
 
     def get_data(self):
         files = self.get_files_to_analyze()
