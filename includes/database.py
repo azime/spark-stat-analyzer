@@ -25,6 +25,12 @@ class Database(object):
             self.rollback()
             raise
 
+    def format_insert_query(self, table_name, columns, data):
+        columns_as_string = ", ".join(columns)
+        records_list_template = ','.join(['%s'] * len(data))
+        return "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(table_name,
+                                                                       columns_as_string, records_list_template)
+
     def delete_by_date(self, tablename, start_date, end_date):
         query = "DELETE FROM stat_compiled.{tablename} WHERE request_date >= ('{start_date}' :: date) " \
                 "AND request_date < ('{end_date}' :: date) + interval '1 day'".format(tablename=tablename,

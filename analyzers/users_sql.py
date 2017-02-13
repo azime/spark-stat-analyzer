@@ -40,8 +40,8 @@ class AnalyseUsersSql(Analyzer):
            else:
                insert_values.append((d.user_id, d.last_user_name, datetime.utcfromtimestamp(d.first_date)))
         if len(insert_values):
-            insert_string = "INSERT INTO stat_compiled.users (id, user_name, date_first_request) VALUES "
-            self.database.execute(insert_string, insert_values)
+            query = self.database.format_insert_query("users", ["id", "user_name", "date_first_request"], insert_values)
+            self.database.execute(query, insert_values)
 
     def launch(self):
         token_stats = self.get_data()

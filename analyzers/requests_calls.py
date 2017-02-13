@@ -1,0 +1,55 @@
+from analyzer import Analyzer
+from pyspark.sql.functions import when, from_unixtime, lit
+
+
+class AnalyzeRequest(Analyzer):
+
+    def prepare_data(self, dataframe):
+        requests_calls = dataframe.select(
+            when(dataframe.coverages[0].region_id.isNull(), '').
+            otherwise(dataframe.coverages[0].region_id).alias('region_id'),
+            dataframe.api,
+            dataframe.user_id,
+            dataframe.application_name,
+            when(dataframe.user_name.like('%canaltp%'), 1).otherwise(0).alias('is_internal_call'),
+            from_unixtime(dataframe.request_date, 'yyyy-MM-dd').alias('request_date'),
+            when(dataframe.end_point_id.isNull(), 1).when(dataframe.end_point_id == 0, 1).
+            otherwise(dataframe.end_point_id).alias('end_point_id'),
+            when(dataframe.journeys.isNull(), 1).otherwise(0).alias('nb_without_journey'),
+            when(dataframe.info_response.isNull(), 0).otherwise(when(dataframe.info_response.object_count.isNull(), 0).
+                                                                otherwise(dataframe.info_response.object_count)).
+            alias('object_count'),
+        ).withColumn("nb", lit(1))\
+            .groupBy("region_id", "api", "user_id", "application_name", "is_internal_call",
+                     "request_date", "end_point_id").agg({"nb": "sum",
+                                                          "nb_without_journey": "sum", "object_count": "sum"})
+
+        requests_calls_collection = requests_calls.collect()
+        return [(requests_calls_row.region_id,
+                 requests_calls_row.api,
+                 requests_calls_row.user_id,
+                 requests_calls_row.application_name,
+                 requests_calls_row.is_internal_call,
+                 requests_calls_row.request_date,
+                 requests_calls_row.end_point_id,
+                 requests_calls_row["sum(nb)"],
+                 requests_calls_row["sum(nb_without_journey)"],
+                 requests_calls_row["sum(object_count)"]
+                ) for requests_calls_row in requests_calls_collection]
+
+    def get_data(self):
+        files = self.get_files_to_analyze()
+        df = self.spark_context.read.json(files)
+        return self.prepare_data(df)
+
+    def truncate_and_insert(self, data):
+        if len(data):
+            self.database.delete_by_date("requests_calls", self.start_date, self.end_date)
+            table_cols = ["region_id", "api", "user_id", "app_name", "is_internal_call", "request_date",
+                          "end_point_id", "nb", "nb_without_journey", "object_count"]
+            query = self.database.format_insert_query("requests_calls", table_cols, data)
+            self.database.execute(query, data)
+
+    def launch(self):
+        token_stats = self.get_data()
+        self.truncate_and_insert(token_stats)
