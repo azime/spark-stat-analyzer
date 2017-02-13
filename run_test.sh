@@ -1,6 +1,6 @@
 #!/bin/bash
 
-python -m pytest --junitxml junit.xml
+python -m pytest -v --junitxml junit.xml
 RESULT=$?
 chown $USER_ID:$USER_ID junit.xml
 find -name "*.pyc" -delete
