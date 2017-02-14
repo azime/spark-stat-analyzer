@@ -5,6 +5,9 @@ from pyspark.sql.functions import when, from_unixtime, lit
 class AnalyzeRequest(Analyzer):
 
     def prepare_data(self, dataframe):
+        if "journeys" not in dataframe.columns:
+            dataframe = dataframe.withColumn("journeys", lit(None))
+
         requests_calls = dataframe.select(
             when(dataframe.coverages[0].region_id.isNull(), '').
             otherwise(dataframe.coverages[0].region_id).alias('region_id'),
@@ -25,6 +28,7 @@ class AnalyzeRequest(Analyzer):
                                                           "nb_without_journey": "sum", "object_count": "sum"})
 
         requests_calls_collection = requests_calls.collect()
+
         return [(requests_calls_row.region_id,
                  requests_calls_row.api,
                  requests_calls_row.user_id,
