@@ -1,5 +1,5 @@
 import pytest
-from datetime import date
+from datetime import date, datetime
 from analyzers.requests_calls import AnalyzeRequest
 import os
 
@@ -24,7 +24,8 @@ def test_requests_calls(spark):
                                      start_date=start_date,
                                      end_date=end_date,
                                      spark_context=spark,
-                                     database=None)
+                                     database=None,
+                                     created_at=datetime(2017, 2, 15, 15, 10))
 
     files = analyze_request.get_files_to_analyze()
 
@@ -40,6 +41,8 @@ def test_requests_calls(spark):
                         (u'region:1', u'v1.stop_areas.collection', 51, u'', 0, u'2017-01-01', 1, 3, 3, 75)]
 
     assert same_list_tuple(result, expected_results)
+    assert analyze_request.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
+           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [AnalyzeRequest] [0:02:00]"
 
 
 def test_requests_calls_without_journeys(spark):
@@ -65,3 +68,4 @@ def test_requests_calls_without_journeys(spark):
                         (u'region:2', u'v1.networks.collection', 25, u'', 0, u'2017-01-01', 1, 1, 1, 4),
                         (u'region:1', u'v1.stop_areas.collection', 51, u'', 0, u'2017-01-01', 1, 3, 3, 75)]
     assert same_list_tuple(result, expected_results)
+

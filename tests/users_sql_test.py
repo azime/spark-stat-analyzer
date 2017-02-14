@@ -1,5 +1,5 @@
 import pytest
-from datetime import date
+from datetime import date, datetime
 from analyzers.users_sql import AnalyseUsersSql
 import os
 
@@ -44,10 +44,13 @@ def test_users_sql_empty_file(spark):
                                 start_date=start_date,
                                 end_date=end_date,
                                 spark_context=spark,
-                                database=None)
+                                database=None,
+                                created_at=datetime(2017, 2, 15, 15, 10))
 
     files = tokenstat.get_files_to_analyze()
     expected_files = [path + '/2017/01/16/users.json.log']
     assert len(files) == len(expected_files)
     results = tokenstat.get_data()
     assert len(results) == 0
+    assert tokenstat.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
+           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [AnalyseUsersSql] [0:02:00]"
