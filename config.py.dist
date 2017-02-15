@@ -3,5 +3,7 @@ db = dict(
     port = '5432',
     dbname = 'dbname',
     user = 'user',
-    password = 'password',
+    password = 'password',,
+    schema = 'stat_compiled',
+    count= 100,
 )

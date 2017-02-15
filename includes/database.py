@@ -1,4 +1,5 @@
 import psycopg2
+from includes.utils import sub_iterable
 
 
 class Database(object):
@@ -6,6 +7,7 @@ class Database(object):
         self.connection_string = "host='{host}' port='{port}' dbname='{dbname}' user='{user}' password='{password}'".\
             format(host=host, port=port, dbname=dbname, user=user, password=password)
         self.schema = kwargs.get("schema", "stat_compiled")
+        self.count = kwargs.get("count", 100)
         self.connection = None
         self.cursor = None
         if auto_connect:
@@ -50,8 +52,10 @@ class Database(object):
         return [tuple(values) for values in self.cursor.fetchall()]
 
     def insert(self, table_name, columns, data):
-        insert_string = self.format_insert_query(table_name, columns, data)
-        self.execute(insert_string, data)
+        for records in sub_iterable(data, self.count):
+            if len(records):
+                insert_string = self.format_insert_query(table_name, columns, records)
+                self.execute(insert_string, records)
 
     def commit(self):
         self.connection.commit()

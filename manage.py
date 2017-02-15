@@ -18,7 +18,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     database = Database(dbname=config.db["dbname"], user=config.db["user"],
                         password=config.db["password"], schema=config.db["schema"],
-                        host=config.db['host'], port=config.db['port'])
+                        host=config.db['host'], port=config.db['port'],
+                        count=config.db['count'])
 
     spark_context = SparkSession.builder.appName(__file__).getOrCreate()
 

@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from analyzers import token_stat, users_sql, error_stat, requests_calls
+from itertools import chain, islice
 
 
 def analyzer_value(value):
@@ -29,3 +30,9 @@ def date_format(value):
         return datetime.strptime(value, '%Y-%m-%d').date()
     except ValueError as e:
         raise ValueError("Unable to parse date, {}".format(e))
+
+
+def sub_iterable(iterable, size, format=tuple):
+    it = iter(iterable)
+    while True:
+        yield format(chain((next(it),), islice(it, size - 1)))
