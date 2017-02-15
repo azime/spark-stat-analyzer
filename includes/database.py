@@ -2,17 +2,21 @@ import psycopg2
 
 
 class Database(object):
-    def __init__(self, dbname, user, password, host="localhost", port=5432):
+    def __init__(self, dbname, user, password, host="localhost", port=5432, auto_connect=True, **kwargs):
         self.connection_string = "host='{host}' port='{port}' dbname='{dbname}' user='{user}' password='{password}'".\
             format(host=host, port=port, dbname=dbname, user=user, password=password)
-        try:
-            self.connection = psycopg2.connect(self.connection_string)
-        except psycopg2.OperationalError:
-            raise
-        self.cursor = self.connection.cursor()
+        self.schema = kwargs.get("schema", "stat_compiled")
+        self.connection = None
+        self.cursor = None
+        if auto_connect:
+            try:
+                self.connect()
+            except psycopg2.OperationalError:
+                raise
 
     def connect(self):
         if not self.cursor:
+            self.connection = psycopg2.connect(self.connection_string)
             self.cursor = self.connection.cursor()
 
     def execute(self, query, values=None):
@@ -25,15 +29,23 @@ class Database(object):
             self.rollback()
             raise
 
+    def format_insert_query(self, table_name, columns, data):
+        return "INSERT INTO {schema_}.{tablename} ({columns}) VALUES {template}".\
+            format(schema_=self.schema, tablename=table_name, columns=", ".join(columns),
+                   template=','.join(['%s'] * len(data)))
+
     def delete_by_date(self, tablename, start_date, end_date):
-        query = "DELETE FROM stat_compiled.{tablename} WHERE request_date >= ('{start_date}' :: date) " \
+        query = "DELETE FROM {schema_}.{tablename} WHERE request_date >= ('{start_date}' :: date) " \
                 "AND request_date < ('{end_date}' :: date) + interval '1 day'".format(tablename=tablename,
                                                                                       start_date=start_date,
-                                                                                      end_date=end_date)
+                                                                                      end_date=end_date,
+                                                                                      schema_=self.schema)
         self.execute(query)
 
     def select_from_table(self, tablename, columns, **where):
-        query = "SELECT {columns} FROM stat_compiled.{tablename}".format(columns=",".join(columns), tablename=tablename)
+        query = "SELECT {columns} FROM {schema_}.{tablename}".format(columns=",".join(columns),
+                                                                     tablename=tablename,
+                                                                     schema_=self.schema)
         self.cursor.execute(query)
         return [tuple(values) for values in self.cursor.fetchall()]
 

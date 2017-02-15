@@ -1,13 +1,13 @@
 import os
 from datetime import datetime
-from itertools import chain, islice
-from analyzers import token_stat, users_sql
+from analyzers import token_stat, users_sql, requests_calls
 
 
 def analyzer_value(value):
     analyzers = {
         "token_stat": token_stat.AnalyzeToken,
-        "users_sql": users_sql.AnalyseUsersSql
+        "users_sql": users_sql.AnalyseUsersSql,
+        "requests_calls": requests_calls.AnalyzeRequest
     }
     lower_value = value.lower()
     if lower_value not in analyzers:

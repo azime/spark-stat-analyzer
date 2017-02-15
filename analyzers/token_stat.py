@@ -22,9 +22,13 @@ class AnalyzeToken(Analyzer):
     def truncate_and_insert(self, data):
         if len(data):
             self.database.delete_by_date("token_stats", self.start_date, self.end_date)
-            query = "INSERT INTO stat_compiled.token_stats (token, request_date, nb_req) VALUES "
+            query = self.database.format_insert_query("token_stats", ["token", "request_date", "nb_req"], data)
             self.database.execute(query, data)
 
     def launch(self):
         token_stats = self.get_data()
         self.truncate_and_insert(token_stats)
+
+    @property
+    def analyzer_name(self):
+        return "TokenStatsUpdater"

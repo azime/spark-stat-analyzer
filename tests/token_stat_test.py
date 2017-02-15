@@ -1,5 +1,5 @@
 import pytest
-from datetime import date
+from datetime import date, datetime
 from analyzers.token_stat import AnalyzeToken
 import os
 
@@ -14,7 +14,9 @@ def test_token_stat(spark):
     tokenstat = AnalyzeToken(storage_path=path,
                              start_date=start_date,
                              end_date=end_date,
-                             spark_context=spark, database=None)
+                             spark_context=spark,
+                             database=None,
+                             current_datetime=datetime(2017, 2, 15, 15, 10))
 
     files = tokenstat.get_files_to_analyze()
 
@@ -31,6 +33,8 @@ def test_token_stat(spark):
                         (u'token:1', date(2017, 1, 16), 2)]
     assert len(results) == len(expected_results)
     assert results == expected_results
+    assert tokenstat.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
+           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [TokenStatsUpdater] [120]"
 
 
 def test_token_stat_empty_file(spark):
