@@ -1,13 +1,14 @@
 import os
 from datetime import datetime
-from analyzers import token_stat, users_sql, requests_calls
+from analyzers import token_stat, users_sql, error_stat, requests_calls
 
 
 def analyzer_value(value):
     analyzers = {
         "token_stat": token_stat.AnalyzeToken,
         "users_sql": users_sql.AnalyseUsersSql,
-        "requests_calls": requests_calls.AnalyzeRequest
+        "requests_calls": requests_calls.AnalyzeRequest,
+        "error_stat": error_stat.AnalyzeError
     }
     lower_value = value.lower()
     if lower_value not in analyzers:

@@ -49,6 +49,10 @@ class Database(object):
         self.cursor.execute(query)
         return [tuple(values) for values in self.cursor.fetchall()]
 
+    def insert(self, table_name, columns, data):
+        insert_string = self.format_insert_query(table_name, columns, data)
+        self.execute(insert_string, data)
+
     def commit(self):
         self.connection.commit()
 

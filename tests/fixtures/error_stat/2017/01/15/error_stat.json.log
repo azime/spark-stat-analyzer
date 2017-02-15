@@ -1,0 +1,11 @@
+{"coverages": [{"region_id": "fr-foo"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.another_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1384611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 43, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "another_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "another_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@canaltp.fr"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+{"coverages": [{"region_id": "fr-idf"}], "api": "v1.some_api", "request_date": 1484611200, "user_id": 42, "application_name": "my_app", "error": {"id": "some_error_id"}, "user_name": "foo@gmail.com"}
+

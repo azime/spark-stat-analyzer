@@ -4,7 +4,7 @@ from pyspark.sql.functions import when, from_unixtime, lit
 
 class AnalyzeRequest(Analyzer):
 
-    def prepare_data(self, dataframe):
+    def collect_data_from_df(self, dataframe):
         if "journeys" not in dataframe.columns:
             dataframe = dataframe.withColumn("journeys", lit(None))
 
@@ -44,15 +44,14 @@ class AnalyzeRequest(Analyzer):
     def get_data(self):
         files = self.get_files_to_analyze()
         df = self.spark_context.read.json(files)
-        return self.prepare_data(df)
+        return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):
         if len(data):
             self.database.delete_by_date("requests_calls", self.start_date, self.end_date)
-            table_cols = ["region_id", "api", "user_id", "app_name", "is_internal_call", "request_date",
-                          "end_point_id", "nb", "nb_without_journey", "object_count"]
-            query = self.database.format_insert_query("requests_calls", table_cols, data)
-            self.database.execute(query, data)
+            columns = ("region_id", "api", "user_id", "app_name", "is_internal_call", "request_date",
+                          "end_point_id", "nb", "nb_without_journey", "object_count")
+            self.database.insert("requests_calls", columns, data)
 
     def launch(self):
         token_stats = self.get_data()
