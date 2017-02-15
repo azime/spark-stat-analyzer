@@ -46,3 +46,7 @@ class AnalyseUsersSql(Analyzer):
     def launch(self):
         token_stats = self.get_data()
         self.insert_or_update(token_stats)
+
+    @property
+    def analyzer_name(self):
+        return "UsersUpdater"

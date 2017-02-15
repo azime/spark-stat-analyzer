@@ -28,3 +28,7 @@ class AnalyzeToken(Analyzer):
     def launch(self):
         token_stats = self.get_data()
         self.truncate_and_insert(token_stats)
+
+    @property
+    def analyzer_name(self):
+        return "TokenStatsUpdater"
