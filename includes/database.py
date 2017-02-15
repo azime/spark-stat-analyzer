@@ -49,24 +49,9 @@ class Database(object):
         self.cursor.execute(query)
         return [tuple(values) for values in self.cursor.fetchall()]
 
-    def insert(self, table_name, columns, rows):
-        columns_as_string = ", ".join(columns)
-        records_list_template = ','.join(['%s'] * len(rows))
-        insert_string = "INSERT INTO stat_compiled.{0} ({1}) VALUES {2}".format(
-            table_name, columns_as_string, records_list_template
-        )
-
-        try:
-            self.cursor.execute(insert_string, rows)
-            self.connection.commit()
-        except psycopg2.Error as e:
-            self.connection.rollback()
-            print("""
-                ERROR: Unable to insert into table %s (%s) rows:
-                %s
-                Exception:
-                %s
-            """ % (table_name, columns_as_string, rows, e))
+    def insert(self, table_name, columns, data):
+        insert_string = self.format_insert_query(table_name, columns, data)
+        self.execute(insert_string, data)
 
     def commit(self):
         self.connection.commit()

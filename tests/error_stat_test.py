@@ -1,5 +1,5 @@
 import pytest
-from datetime import date
+from datetime import date, datetime
 from analyzers.error_stat import AnalyzeError
 import os
 
@@ -13,7 +13,9 @@ def test_error_stat(spark):
     analyzer = AnalyzeError(storage_path=path,
                              start_date=start_date,
                              end_date=end_date,
-                             spark_context=spark, database=None)
+                             spark_context=spark,
+                             database=None,
+                             current_datetime=datetime(2017, 2, 15, 15, 10))
 
     results = analyzer.get_data()
     # each record have a field that change to test the groupBy clause (ie: we should only group if
@@ -38,10 +40,12 @@ def test_error_stat(spark):
     ]
     results_to_compare = [];
     for result in results:
-        results_to_compare.append(result.asDict());
+        results_to_compare.append(result.asDict())
 
     assert len(expected_results) == len(results_to_compare)
 
     for expected_result in expected_results:
         assert expected_result in results_to_compare
 
+    assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
+           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [ErrorStatsUpdater] [120]"

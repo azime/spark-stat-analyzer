@@ -6,7 +6,7 @@ from analyzers.analyzer import Analyzer
 
 class AnalyseUsersSql(Analyzer):
 
-    def prepare_data(self, dataframe):
+    def collect_data_from_df(self, dataframe):
         if dataframe.count():
             parition_by_user_id = Window.partitionBy("user_id")
             wasc = parition_by_user_id.orderBy("request_date")
@@ -27,7 +27,7 @@ class AnalyseUsersSql(Analyzer):
     def get_data(self):
         files = self.get_files_to_analyze()
         df = self.spark_context.read.json(files)
-        return self.prepare_data(df)
+        return self.collect_data_from_df(df)
 
     def insert_or_update(self, data):
         users_in_database = dict(self.database.select_from_table("users", ["id", "user_name"]))
@@ -40,8 +40,7 @@ class AnalyseUsersSql(Analyzer):
             else:
                 insert_values.append((d.user_id, d.last_user_name, datetime.utcfromtimestamp(d.first_date)))
         if len(insert_values):
-            query = self.database.format_insert_query("users", ["id", "user_name", "date_first_request"], insert_values)
-            self.database.execute(query, insert_values)
+            self.database.insert("users", ("id", "user_name", "date_first_request"), insert_values)
 
     def launch(self):
         token_stats = self.get_data()
