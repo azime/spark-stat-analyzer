@@ -49,7 +49,7 @@ class AnalyzeRequest(Analyzer):
     def truncate_and_insert(self, data):
         if len(data):
             columns = ("region_id", "api", "user_id", "app_name", "is_internal_call", "request_date",
-                          "end_point_id", "nb", "nb_without_journey", "object_count")
+                       "end_point_id", "nb", "nb_without_journey", "object_count")
             self.database.insert(table_name="requests_calls", columns=columns, data=data, start_date=self.start_date,
                                  end_date=self.end_date)
 

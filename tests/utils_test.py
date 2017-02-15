@@ -50,8 +50,29 @@ def test_sub_iterable_empty():
     assert len([v for v in values]) == 0
 
 
-def test_sub_iterable():
+def test_sub_iterable_format_tuple():
     result = sub_iterable([1, 2, 3, 4, 5], 2)
     expected_results = [(1, 2), (3, 4), (5,)]
 
     assert same_list_tuple([v for v in result], expected_results)
+
+
+def test_sub_iterable_format_list():
+    result = [v for v in sub_iterable([1, 2, 3, 4, 5], 2, list)]
+
+    expected_results = [[1, 2], [3, 4], [5]]
+    assert result[0] == expected_results[0]
+    assert result[1] == expected_results[1]
+    assert result[2] == expected_results[2]
+    assert len(result) == len(expected_results)
+
+
+def test_sub_iterable_format_string():
+    result = [v for v in sub_iterable("iterable", 2, list)]
+
+    expected_results = [['i', 't'], ['e', 'r'], ['a', 'b'], ['l', 'e']]
+    assert result[0] == expected_results[0]
+    assert result[1] == expected_results[1]
+    assert result[2] == expected_results[2]
+    assert result[3] == expected_results[3]
+    assert len(result) == len(expected_results)

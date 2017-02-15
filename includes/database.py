@@ -7,7 +7,7 @@ class Database(object):
         self.connection_string = "host='{host}' port='{port}' dbname='{dbname}' user='{user}' password='{password}'".\
             format(host=host, port=port, dbname=dbname, user=user, password=password)
         self.schema = kwargs.get("schema", "stat_compiled")
-        self.count = kwargs.get("count", 100)
+        self.insert_count = kwargs.get("insert_count", 100)
         self.connection = None
         self.cursor = None
         if auto_connect:
@@ -45,7 +45,7 @@ class Database(object):
             if delete:
                 query = self.format_delete_query(table_name, start_date, end_date)
                 self.cursor.execute(query)
-            for records in sub_iterable(data, self.count):
+            for records in sub_iterable(data, self.insert_count):
                 if len(records):
                     insert_string = self.format_insert_query(table_name, columns, records)
                     self.cursor.execute(insert_string, records)

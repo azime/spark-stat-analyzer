@@ -5,5 +5,5 @@ db = dict(
     user = 'user',
     password = 'password',,
     schema = 'stat_compiled',
-    count= 100,
+    insert_count= 100,
 )
