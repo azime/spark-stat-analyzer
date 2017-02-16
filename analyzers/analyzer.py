@@ -8,12 +8,12 @@ import math
 class Analyzer(object):
     __metaclass__ = ABCMeta
 
-    def __init__(self, storage_path, start_date, end_date, spark_context, database, **kwargs):
+    def __init__(self, storage_path, start_date, end_date, spark_session, database, **kwargs):
         self.storage_path = storage_path
         self.start_date = start_date
         self.end_date = end_date
         self.database = database
-        self.spark_context = spark_context
+        self.spark_session = spark_session
         self.created_at = kwargs.get("current_datetime", datetime.now())
 
     def get_files_to_analyze(self):
@@ -37,7 +37,7 @@ class Analyzer(object):
                                                                   math.floor((current_datetime - self.created_at).total_seconds()))
 
     def terminate(self, current_datetime):
-        self.spark_context.sparkContext.stop()
+        self.spark_session.sparkContext.stop()
         print(self.get_log_analyzer_stats(current_datetime))
 
     @property
