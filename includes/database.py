@@ -1,4 +1,5 @@
 import psycopg2
+from includes.utils import sub_iterable
 
 
 class Database(object):
@@ -6,6 +7,7 @@ class Database(object):
         self.connection_string = "host='{host}' port='{port}' dbname='{dbname}' user='{user}' password='{password}'".\
             format(host=host, port=port, dbname=dbname, user=user, password=password)
         self.schema = kwargs.get("schema", "stat_compiled")
+        self.insert_count = kwargs.get("insert_count", 100)
         self.connection = None
         self.cursor = None
         if auto_connect:
@@ -19,42 +21,39 @@ class Database(object):
             self.connection = psycopg2.connect(self.connection_string)
             self.cursor = self.connection.cursor()
 
-    def execute(self, query, values=None):
-        try:
-            self.cursor.execute(query, values)
-            self.commit()
-        except psycopg2.Error:
-            self.rollback()
-        except TypeError:
-            self.rollback()
-            raise
-
     def format_insert_query(self, table_name, columns, data):
         return "INSERT INTO {schema_}.{tablename} ({columns}) VALUES {template}".\
             format(schema_=self.schema, tablename=table_name, columns=", ".join(columns),
                    template=','.join(['%s'] * len(data)))
 
-    def delete_by_date(self, tablename, start_date, end_date):
-        query = "DELETE FROM {schema_}.{tablename} WHERE request_date >= ('{start_date}' :: date) " \
-                "AND request_date < ('{end_date}' :: date) + interval '1 day'".format(tablename=tablename,
-                                                                                      start_date=start_date,
-                                                                                      end_date=end_date,
-                                                                                      schema_=self.schema)
-        self.execute(query)
+    def format_delete_query(self, table_name, start_date, end_date):
+        return "DELETE FROM {schema_}.{table_name} WHERE request_date >= ('{start_date}' :: date) " \
+               "AND request_date < ('{end_date}' :: date) + interval '1 day'".format(table_name=table_name,
+                                                                                     start_date=start_date,
+                                                                                     end_date=end_date,
+                                                                                     schema_=self.schema)
 
-    def select_from_table(self, tablename, columns, **where):
-        query = "SELECT {columns} FROM {schema_}.{tablename}".format(columns=",".join(columns),
-                                                                     tablename=tablename,
-                                                                     schema_=self.schema)
+    def select_from_table(self, table_name, columns, **where):
+        query = "SELECT {columns} FROM {schema_}.{table_name}".format(columns=",".join(columns),
+                                                                      table_name=table_name,
+                                                                      schema_=self.schema)
         self.cursor.execute(query)
         return [tuple(values) for values in self.cursor.fetchall()]
 
-    def insert(self, table_name, columns, data):
-        insert_string = self.format_insert_query(table_name, columns, data)
-        self.execute(insert_string, data)
-
-    def commit(self):
-        self.connection.commit()
-
-    def rollback(self):
-        self.connection.rollback()
+    def insert(self, table_name, columns, data, start_date=None, end_date=None, delete=True):
+        try:
+            if delete:
+                query = self.format_delete_query(table_name, start_date, end_date)
+                self.cursor.execute(query)
+            for records in sub_iterable(data, self.insert_count):
+                if len(records):
+                    insert_string = self.format_insert_query(table_name, columns, records)
+                    self.cursor.execute(insert_string, records)
+            self.connection.commit()
+        except psycopg2.Error as e:
+            print("Error in insert function: {msg}".format(msg=e.message))
+            self.connection.rollback()
+        except TypeError as e:
+            print("Error in insert function: {msg}".format(msg=e.message))
+            self.connection.rollback()
+            raise

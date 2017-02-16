@@ -3,7 +3,7 @@ import argparse
 import config
 from pyspark.sql import SparkSession
 from includes import utils
-
+from datetime import datetime
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Process some integers.')
@@ -18,10 +18,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     database = Database(dbname=config.db["dbname"], user=config.db["user"],
                         password=config.db["password"], schema=config.db["schema"],
-                        host=config.db['host'], port=config.db['port'])
+                        host=config.db['host'], port=config.db['port'],
+                        insert_count=config.db['insert_count'])
 
     spark_context = SparkSession.builder.appName(__file__).getOrCreate()
 
     analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_context, database)
     analyzer.launch()
-    analyzer.terminate()
+    analyzer.terminate(datetime.now())

@@ -6,4 +6,6 @@ db = dict(
     dbname = os.getenv('STAT_DATABASE_DBNAME', 'statistics'),
     user = os.getenv('STAT_DATABASE_USER', 'statistics'),
     password = os.getenv('STAT_DATABASE_PASSWORD', 'password'),
+    schema = os.getenv('STAT_DATABASE_SCHEMA', 'stat_compiled'),
+    insert_count = os.getenv('STAT_DATABASE_INSERT_COUNT', 100),
 )

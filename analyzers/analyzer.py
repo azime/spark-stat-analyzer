@@ -2,6 +2,7 @@ from abc import abstractmethod, ABCMeta
 from glob import glob
 from datetime import timedelta
 from datetime import datetime
+import math
 
 
 class Analyzer(object):
@@ -29,16 +30,15 @@ class Analyzer(object):
     def launch(self):
         pass
 
-    def get_log_analyzer_stats(self, current_datetime=datetime.now()):
-        runtime = current_datetime - self.created_at
+    def get_log_analyzer_stats(self, current_datetime):
         return "[spark-stat-analyzer] [OK] [%s] [%s] [%s] [%d]" %(current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
                                                                   self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                                                                   self.analyzer_name,
-                                                                  runtime.total_seconds())
+                                                                  math.floor((current_datetime - self.created_at).total_seconds()))
 
-    def terminate(self):
+    def terminate(self, current_datetime):
         self.spark_context.sparkContext.stop()
-        print(self.get_log_analyzer_stats())
+        print(self.get_log_analyzer_stats(current_datetime))
 
     @property
     @abstractmethod

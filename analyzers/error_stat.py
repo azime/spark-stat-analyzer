@@ -25,10 +25,11 @@ class AnalyzeError(Analyzer):
 
     def truncate_and_insert(self, data):
         if len(data):
-            self.database.delete_by_date("error_stats", self.start_date, self.end_date)
             columns = ('region_id', 'api', 'request_date', 'user_id', 'app_name', 'err_id',
                        'is_internal_call', 'nb_req')
-            self.database.insert("error_stats", columns, data)
+            self.database.insert(table_name="error_stats", columns=columns, data=data,
+                                 start_date=self.start_date,
+                                 end_date=self.end_date)
 
     def launch(self):
         error_stats = self.get_data()
