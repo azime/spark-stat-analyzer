@@ -2,7 +2,7 @@ from datetime import datetime
 from pyspark.sql.window import Window
 from pyspark.sql.functions import first, desc
 from analyzers.analyzer import Analyzer
-import logging
+from includes.logger import get_logger
 
 
 class AnalyseUsersSql(Analyzer):
@@ -23,7 +23,7 @@ class AnalyseUsersSql(Analyzer):
 
             return new_users.collect()
         else:
-            logging.getLogger(__name__).debug("Empty data frame.")
+            get_logger().debug("Empty data frame.")
             return []
 
     def get_data(self):

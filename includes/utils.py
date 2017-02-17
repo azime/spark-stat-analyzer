@@ -28,12 +28,6 @@ def check_and_get_path(path):
     return path
 
 
-def check_and_get_file(file):
-    if not os.path.isfile(file):
-        raise NotImplementedError('Path not exist, you give {file}'.format(file=file))
-    return file
-
-
 def date_format(value):
     try:
         return datetime.strptime(value, '%Y-%m-%d').date()
@@ -45,4 +39,3 @@ def sub_iterable(iterable, size, format=tuple):
     it = iter(iterable)
     while True:
         yield format(chain((next(it),), islice(it, size - 1)))
-
