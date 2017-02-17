@@ -2,6 +2,7 @@ from datetime import datetime
 from pyspark.sql.window import Window
 from pyspark.sql.functions import first, desc
 from analyzers.analyzer import Analyzer
+import logging
 
 
 class AnalyseUsersSql(Analyzer):
@@ -22,6 +23,7 @@ class AnalyseUsersSql(Analyzer):
 
             return new_users.collect()
         else:
+            logging.getLogger(__name__).debug("Empty data frame.")
             return []
 
     def get_data(self):
@@ -36,7 +38,7 @@ class AnalyseUsersSql(Analyzer):
             if d.user_id in users_in_database:
                 if d.last_user_name != users_in_database[d.user_id]:
                     update_string = "UPDATE stat_compiled.users SET user_name=%s WHERE id=%s;"
-                    self.database.execute(update_string, (d.last_user_name, d.user_id))
+                    self.database.cursor.execute(update_string, (d.last_user_name, d.user_id))
             else:
                 insert_values.append((d.user_id, d.last_user_name, datetime.utcfromtimestamp(d.first_date)))
         if len(insert_values):

@@ -1,6 +1,6 @@
 from includes.database import Database
+from includes.config import Config
 import argparse
-import config
 from pyspark.sql import SparkSession
 from includes import utils
 from datetime import datetime
@@ -14,12 +14,17 @@ if __name__ == "__main__":
                         type=utils.date_format, required=True)
     parser.add_argument("-a", "--analyzer", help="Analyzer name.",
                         required=True, type=utils.analyzer_value)
+    parser.add_argument("-c", "--config", help="config file name.",
+                        required=True, type=utils.check_and_get_file)
 
     args = parser.parse_args()
-    database = Database(dbname=config.db["dbname"], user=config.db["user"],
-                        password=config.db["password"], schema=config.db["schema"],
-                        host=config.db['host'], port=config.db['port'],
-                        insert_count=config.db['insert_count'])
+
+    config = Config(args.config)
+
+    database = Database(dbname=config.dbname, user=config.user,
+                        password=config.password, schema=config.schema,
+                        host=config.host, port=config.port,
+                        insert_count=config.insert_count)
 
     spark_session = SparkSession.builder.appName(__file__).getOrCreate()
 

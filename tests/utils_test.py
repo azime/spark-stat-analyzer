@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 import os
-from includes.utils import check_and_get_path, date_format, analyzer_value, sub_iterable
+from includes.utils import check_and_get_path, date_format, analyzer_value, sub_iterable, check_and_get_file
 from analyzers import AnalyzeTokens, AnalyseUsersSql, AnalyzeRequest, \
     AnalyzeCoverageModes, AnalyzeErrors, AnalyzeCoverageStopAreas
 from tests.checker import same_list_tuple
@@ -10,6 +10,17 @@ from tests.checker import same_list_tuple
 def test_path_invalid():
     with pytest.raises(NotImplementedError):
         check_and_get_path("aaa")
+
+
+def test_file_valid():
+    settings = os.getcwd() + "/tests/fixtures/config/settings.json"
+    assert settings == check_and_get_file(settings)
+
+
+
+def test_file_invalid():
+    with pytest.raises(NotImplementedError):
+        check_and_get_file("aaa")
 
 
 def test_path_valid():

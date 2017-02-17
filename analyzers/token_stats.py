@@ -1,5 +1,6 @@
 from pyspark.sql.functions import to_date
-from analyzers.analyzer import Analyzer
+from analyzer import Analyzer
+import logging
 
 
 class AnalyzeTokens(Analyzer):
@@ -12,11 +13,12 @@ class AnalyzeTokens(Analyzer):
             # tokenRow attributes can be accessed by .token, .request_date_trunc but not .count which returns count method of tuple
             return [(tokenRow['token'], tokenRow['request_date_trunc'], tokenRow['count']) for tokenRow in tokenStats]
         else:
+            logging.getLogger(__name__).debug("Empty data frame.")
             return []
 
     def get_data(self):
         files = self.get_files_to_analyze()
-        df = self.load_data(files)
+        df = self.spark_session.read.json(files)
         return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):

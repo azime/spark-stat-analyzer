@@ -1,5 +1,6 @@
 import psycopg2
 from includes.utils import sub_iterable
+import logging
 
 
 class Database(object):
@@ -13,7 +14,8 @@ class Database(object):
         if auto_connect:
             try:
                 self.connect()
-            except psycopg2.OperationalError:
+            except psycopg2.OperationalError as e:
+                logging.getLogger(__name__).critical('Cannot connect database, error: {msg}'.format(msg=e.message))
                 raise
 
     def connect(self):
@@ -45,15 +47,22 @@ class Database(object):
             if delete:
                 query = self.format_delete_query(table_name, start_date, end_date)
                 self.cursor.execute(query)
+            size = len(data)
+            count = 0
             for records in sub_iterable(data, self.insert_count):
                 if len(records):
+                    count += len(records)
+                    logging.getLogger(__name__).debug("Insert into {table} {count}/{size}".format(table=table_name,
+                                                                                                  count=count,
+                                                                                                  size=size))
                     insert_string = self.format_insert_query(table_name, columns, records)
                     self.cursor.execute(insert_string, records)
             self.connection.commit()
         except psycopg2.Error as e:
-            print("Error in insert function: {msg}".format(msg=e.message))
+            logging.getLogger(__name__).critical("Error in insert function: {msg}".format(msg=e.message))
             self.connection.rollback()
+            raise
         except TypeError as e:
-            print("Error in insert function: {msg}".format(msg=e.message))
+            logging.getLogger(__name__).critical("Error in insert function: {msg}".format(msg=e.message))
             self.connection.rollback()
             raise
