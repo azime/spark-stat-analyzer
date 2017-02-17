@@ -26,7 +26,7 @@ Create config.py file from template config.py.dist and adapt them
 
 * For requests_calls consolidation
 ```
-<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master='local[3]' manage.py -a <analyzer> -i <your_export_directory> -s <start_date> -e <end_date> -c settings.json
+<path/to/spark>/bin/spark-submit  --conf spark.ui.showConsoleProgress=true --master='local[3]' manage.py -a <analyzer> -i <your_export_directory> -s <start_date> -e <end_date>
 ```
 
 where:

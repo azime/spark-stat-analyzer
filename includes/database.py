@@ -42,6 +42,19 @@ class Database(object):
         self.cursor.execute(query)
         return [tuple(values) for values in self.cursor.fetchall()]
 
+    def update(self, query, values):
+        try:
+            self.cursor.execute(query.format(schema_=self.schema), values)
+            self.connection.commit()
+        except psycopg2.Error as e:
+            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            self.connection.rollback()
+            raise
+        except TypeError as e:
+            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            self.connection.rollback()
+            raise
+
     def insert(self, table_name, columns, data, start_date=None, end_date=None, delete=True):
         try:
             if delete:
@@ -52,9 +65,9 @@ class Database(object):
             for records in sub_iterable(data, self.insert_count):
                 if len(records):
                     count += len(records)
-                    get_logger().warning("Insert into {table} {count}/{size}".format(table=table_name,
-                                                                                     count=count,
-                                                                                     size=size))
+                    get_logger().debug("Insert into {table} {count}/{size}".format(table=table_name,
+                                                                                   count=count,
+                                                                                   size=size))
                     insert_string = self.format_insert_query(table_name, columns, records)
                     self.cursor.execute(insert_string, records)
             self.connection.commit()

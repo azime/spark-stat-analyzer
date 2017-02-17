@@ -37,7 +37,7 @@ def test_coverage_stop_area_no_valid_found(spark):
     assert len(results) == 0
 
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
-           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageStopAreas] [120]"
+           "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageStopAreas] [120]"
 
 @pytest.mark.parametrize("day,expected_results", [
     (15,

@@ -37,8 +37,8 @@ class AnalyseUsersSql(Analyzer):
         for d in data:
             if d.user_id in users_in_database:
                 if d.last_user_name != users_in_database[d.user_id]:
-                    update_string = "UPDATE stat_compiled.users SET user_name=%s WHERE id=%s;"
-                    self.database.cursor.execute(update_string, (d.last_user_name, d.user_id))
+                    self.database.update("UPDATE {schema_}.users SET user_name=%s WHERE id=%s;",
+                                         (d.last_user_name, d.user_id))
             else:
                 insert_values.append((d.user_id, d.last_user_name, datetime.utcfromtimestamp(d.first_date)))
         if len(insert_values):

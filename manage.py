@@ -25,6 +25,6 @@ if __name__ == "__main__":
     logger.init_logger(config.logger.get("level", ""))
     spark_session = SparkSession.builder.appName(__file__).getOrCreate()
 
-    analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_context, database)
+    analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_session, database)
     analyzer.launch()
     analyzer.terminate(datetime.now())
