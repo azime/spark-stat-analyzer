@@ -6,10 +6,10 @@ from itertools import chain, islice
 
 def analyzer_value(value):
     analyzers = {
-        "token_stat": token_stat.AnalyzeToken,
-        "users_sql": users_sql.AnalyseUsersSql,
+        "token_stats": token_stat.AnalyzeToken,
+        "users": users_sql.AnalyseUsersSql,
         "requests_calls": requests_calls.AnalyzeRequest,
-        "error_stat": error_stat.AnalyzeError
+        "error_stats": error_stat.AnalyzeError
     }
     lower_value = value.lower()
     if lower_value not in analyzers:
