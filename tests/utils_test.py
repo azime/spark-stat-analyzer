@@ -34,13 +34,13 @@ def test_option_invalid():
 
 
 def test_analyzer_valid():
-    values = {"token_stat": AnalyzeToken, "users_sql": AnalyseUsersSql, "requests_calls": AnalyzeRequest}
+    values = {"token_stats": AnalyzeToken, "users": AnalyseUsersSql, "requests_calls": AnalyzeRequest}
     for value in values:
         assert values[value] == analyzer_value(value)
 
 
 def test_analyzer_upper_lower():
-    values = {"TOKEN_stat": AnalyzeToken, "users_SQL": AnalyseUsersSql, "requests_CALLS": AnalyzeRequest}
+    values = {"TOKEN_stats": AnalyzeToken, "USERS": AnalyseUsersSql, "requests_CALLS": AnalyzeRequest}
     for value in values:
         assert values[value] == analyzer_value(value)
 
