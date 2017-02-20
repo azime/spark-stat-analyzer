@@ -20,7 +20,7 @@ class AnalyzeError(Analyzer):
 
     def get_data(self):
         files = self.get_files_to_analyze()
-        df = self.spark_context.read.json(files)
+        df = self.spark_session.read.json(files)
         return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):

@@ -13,7 +13,7 @@ def test_token_stat(spark):
     tokenstat = AnalyzeToken(storage_path=path,
                              start_date=start_date,
                              end_date=end_date,
-                             spark_context=spark,
+                             spark_session=spark,
                              database=None,
                              current_datetime=datetime(2017, 2, 15, 15, 10))
 
@@ -43,7 +43,7 @@ def test_token_stat_empty_file(spark):
     tokenstat = AnalyzeToken(storage_path=path,
                                 start_date=start_date,
                                 end_date=end_date,
-                                spark_context=spark,
+                                spark_session=spark,
                                 database=None)
 
     files = tokenstat.get_files_to_analyze()

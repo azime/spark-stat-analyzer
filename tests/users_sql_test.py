@@ -14,7 +14,7 @@ def test_users_sql(spark):
     tokenstat = AnalyseUsersSql(storage_path=path,
                                 start_date=start_date,
                                 end_date=end_date,
-                                spark_context=spark,
+                                spark_session=spark,
                                 database=None)
 
     files = tokenstat.get_files_to_analyze()
@@ -43,7 +43,7 @@ def test_users_sql_empty_file(spark):
     tokenstat = AnalyseUsersSql(storage_path=path,
                                 start_date=start_date,
                                 end_date=end_date,
-                                spark_context=spark,
+                                spark_session=spark,
                                 database=None,
                                 current_datetime=datetime(2017, 2, 15, 15, 10))
 

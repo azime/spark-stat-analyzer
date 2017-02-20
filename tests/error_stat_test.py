@@ -13,7 +13,7 @@ def test_error_stat(spark):
     analyzer = AnalyzeError(storage_path=path,
                              start_date=start_date,
                              end_date=end_date,
-                             spark_context=spark,
+                             spark_session=spark,
                              database=None,
                              current_datetime=datetime(2017, 2, 15, 15, 10))
 
@@ -38,7 +38,7 @@ def test_error_stat(spark):
             {"region_id": u"fr-idf", "api": u"v1.some_api", "request_date": u"2017-01-17", "user_id": 42, \
             "application_name": u"my_app", "err_id": u"some_error_id", "is_internal_call": 0, "count": 3},
     ]
-    results_to_compare = [];
+    results_to_compare = []
     for result in results:
         results_to_compare.append(result.asDict())
 
