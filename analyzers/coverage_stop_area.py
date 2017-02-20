@@ -5,36 +5,39 @@ from datetime import datetime
 
 class AnalyzeCoverageStopArea(Analyzer):
     @staticmethod
+    def get_stop_areas(stat_dict):
+        if 'journeys' not in stat_dict or len(stat_dict['journeys']) <= 0:
+            return
+        for journey in stat_dict['journeys']:
+            stop_areas_of_journey = []
+            journey_sections = journey.get('sections', [])
+            for sections in journey_sections:
+                if sections['type'] != 'public_transport':
+                    continue
+
+                for from_or_to in ['from', 'to']:
+                    if from_or_to + '_id' not in sections:
+                        continue
+
+                    admin_insee = sections.get(from_or_to + '_admin_insee', '')
+                    deparment_code = '' if admin_insee == '' else admin_insee[:2]
+                    stop_area_dict = {
+                        "stop_area_id": sections[from_or_to + '_id'],
+                        "stop_area_name": sections[from_or_to + '_name'],
+                        "city_id": sections.get(from_or_to + '_admin_id', ''),
+                        "city_name": sections.get(from_or_to + '_admin_name', ''),
+                        "city_insee": admin_insee,
+                        "department_code": deparment_code
+                    }
+
+                    if stop_area_dict not in stop_areas_of_journey:
+                        stop_areas_of_journey.append(stop_area_dict)
+                        yield stop_area_dict
+
+    @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
         result = []
-        stop_areas = []
-        if 'journeys' in stat_dict and len(stat_dict['journeys']) > 0:
-            for journey in stat_dict['journeys']:
-                stop_areas_of_journey = []
-                try:
-                    for sections in journey['sections']:
-                        if sections['type'] == 'public_transport':
-                            for from_or_to in ['from', 'to']:
-                                if from_or_to + '_id' in sections:
-                                    admin_insee = sections.get(from_or_to + '_admin_insee', '')
-                                    deparment_code = '' if admin_insee == '' else admin_insee[:2]
-                                    stop_area_dict = {
-                                        "stop_area_id": sections[from_or_to + '_id'],
-                                        "stop_area_name": sections[from_or_to + '_name'],
-                                        "city_id": sections.get(from_or_to + '_admin_id', ''),
-                                        "city_name": sections.get(from_or_to + '_admin_name', ''),
-                                        "city_insee": admin_insee,
-                                        "department_code": deparment_code
-                                    }
-
-                                    if stop_area_dict not in stop_areas_of_journey:
-                                        stop_areas.append(stop_area_dict)
-                                        stop_areas_of_journey.append(stop_area_dict)
-                except KeyError, e:
-                    print('key "%s" is missing in dictionnary from json' % e.message)
-                    # print(json.dumps(stat_dict))
-                    pass
-        for stop_area in stop_areas:
+        for stop_area in AnalyzeCoverageStopArea.get_stop_areas(stat_dict):
             result.append(
                 (
                     (
@@ -63,8 +66,7 @@ class AnalyzeCoverageStopArea(Analyzer):
             ).reduceByKey(
                 lambda (a), (b): (a + b)
             ).collect()
-            coverage_stop_areas = [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_stop_areas]
-            return coverage_stop_areas
+            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_stop_areas]
         else:
             return []
 
