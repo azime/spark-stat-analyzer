@@ -26,7 +26,7 @@ class AnalyseUsersSql(Analyzer):
 
     def get_data(self):
         files = self.get_files_to_analyze()
-        df = self.spark_session.read.json(files)
+        df = self.load_data(files)
         return self.collect_data_from_df(df)
 
     def insert_or_update(self, data):

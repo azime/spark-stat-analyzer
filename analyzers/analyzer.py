@@ -3,6 +3,7 @@ from glob import glob
 from datetime import timedelta
 from datetime import datetime
 import math
+import json
 
 
 class Analyzer(object):
@@ -44,3 +45,11 @@ class Analyzer(object):
     @abstractmethod
     def analyzer_name(self):
         pass
+
+    def load_data(self, files, rdd_mode=False, separator=','):
+        if rdd_mode:
+            return self.spark_session.sparkContext.textFile(separator.join(files)).map(
+                lambda stat: json.loads(stat) # json to dict
+            )
+        else:
+            return self.spark_session.read.json(files)

@@ -1,5 +1,5 @@
 from pyspark.sql.functions import to_date
-from analyzer import Analyzer
+from analyzers.analyzer import Analyzer
 
 
 class AnalyzeToken(Analyzer):
@@ -16,7 +16,7 @@ class AnalyzeToken(Analyzer):
 
     def get_data(self):
         files = self.get_files_to_analyze()
-        df = self.spark_session.read.json(files)
+        df = self.load_data(files)
         return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):

@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.token_stat import AnalyzeToken
+from analyzers import AnalyzeToken
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")

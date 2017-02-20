@@ -2,9 +2,7 @@ import pytest
 from datetime import date
 import os
 from includes.utils import check_and_get_path, date_format, analyzer_value, sub_iterable
-from analyzers.token_stat import AnalyzeToken
-from analyzers.users_sql import AnalyseUsersSql
-from analyzers.requests_calls import AnalyzeRequest
+from analyzers import AnalyzeToken, AnalyseUsersSql, AnalyzeRequest
 from tests.checker import same_list_tuple
 
 
