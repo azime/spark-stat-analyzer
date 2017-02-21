@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from analyzers import AnalyseUsersSql, AnalyzeToken, AnalyzeRequest,\
-    AnalyzeError, AnalyzeCoverageStopArea, AnalyzeCoverageModes
+    AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageModes
 from itertools import chain, islice
 
 
@@ -10,8 +10,8 @@ def analyzer_value(value):
         "token_stats": AnalyzeToken,
         "users": AnalyseUsersSql,
         "requests_calls": AnalyzeRequest,
-        "error_stat": AnalyzeError,
-        "coverage_stop_area": AnalyzeCoverageStopArea,
+        "error_stat": AnalyzeErrors,
+        "coverage_stop_area": AnalyzeCoverageStopAreas,
         "coverage_modes": AnalyzeCoverageModes
     }
     lower_value = value.lower()

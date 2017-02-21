@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers import AnalyzeError
+from analyzers import AnalyzeErrors
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")
