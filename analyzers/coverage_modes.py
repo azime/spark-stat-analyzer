@@ -31,16 +31,26 @@ class AnalyzeCoverageModes(Analyzer):
     def get_tuples_from_stat_dict(stat_dict):
         result = []
         for type_and_mode in AnalyzeCoverageModes.get_modes(stat_dict):
-            result.append((
-                stat_dict['coverages'][0]['region_id'],
-                type_and_mode.get("type"),
-                type_and_mode.get("mode", ""),
-                type_and_mode.get("commercial_mode_id", ""),
-                type_and_mode.get("commercial_mode_name", ""),
-                # is_internal_call
-                1 if 'canaltp' in stat_dict['user_name'] else 0,
-                # request_date
-                datetime.utcfromtimestamp(stat_dict['request_date']).date()), (1))
+            result.append(
+                (
+                    (
+                        (
+                            stat_dict['coverages'][0]['region_id'],
+                            type_and_mode.get("type"),
+                            type_and_mode.get("mode", ""),
+                            type_and_mode.get("commercial_mode_id", ""),
+                            type_and_mode.get("commercial_mode_name", ""),
+                            # is_internal_call
+                            1 if 'canaltp' in stat_dict['user_name'] else 0,
+                            # request_date
+                            datetime.utcfromtimestamp(stat_dict['request_date']).date()
+                        )
+                    ),
+                (
+                    1
+                )
+                )
+            )
         return result
 
     def collect_data_from_df(self, rdd):
