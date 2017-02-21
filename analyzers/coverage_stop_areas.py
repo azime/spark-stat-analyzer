@@ -3,7 +3,7 @@ from analyzer import Analyzer
 from datetime import datetime
 
 
-class AnalyzeCoverageStopArea(Analyzer):
+class AnalyzeCoverageStopAreas(Analyzer):
     @staticmethod
     def get_stop_areas(stat_dict):
         if 'journeys' not in stat_dict or len(stat_dict['journeys']) <= 0:
@@ -37,7 +37,7 @@ class AnalyzeCoverageStopArea(Analyzer):
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
         result = []
-        for stop_area in AnalyzeCoverageStopArea.get_stop_areas(stat_dict):
+        for stop_area in AnalyzeCoverageStopAreas.get_stop_areas(stat_dict):
             result.append(
                 (
                     (

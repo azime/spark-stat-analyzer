@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.error_stat import AnalyzeError
+from analyzers.error_stats import AnalyzeErrors
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")
@@ -10,7 +10,7 @@ def test_error_stat(spark):
     start_date = date(2017, 1, 15)
     end_date = date(2017, 1, 15)
 
-    analyzer = AnalyzeError(storage_path=path,
+    analyzer = AnalyzeErrors(storage_path=path,
                              start_date=start_date,
                              end_date=end_date,
                              spark_session=spark,

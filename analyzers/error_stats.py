@@ -2,7 +2,7 @@ from pyspark.sql.functions import when, from_unixtime
 from analyzer import Analyzer
 
 
-class AnalyzeError(Analyzer):
+class AnalyzeErrors(Analyzer):
     def collect_data_from_df(self, df):
         return df.select(
             when(df['coverages'][0]['region_id'].isNull(), '').otherwise(df['coverages'][0]['region_id']).

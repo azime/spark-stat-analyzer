@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.coverage_stop_areas import AnalyzeCoverageStopArea
+from analyzers.coverage_stop_areas import AnalyzeCoverageStopAreas
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")
@@ -12,7 +12,7 @@ def test_coverage_stop_area_no_journeys(spark):
     start_date = date(2017, 1, 22)
     end_date = date(2017, 1, 22)
 
-    analyzer = AnalyzeCoverageStopArea(storage_path=path,
+    analyzer = AnalyzeCoverageStopAreas(storage_path=path,
                                        start_date=start_date,
                                        end_date=end_date,
                                        spark_session=spark,
@@ -26,7 +26,7 @@ def test_coverage_stop_area_no_valid_found(spark):
     start_date = date(2017, 1, 20)
     end_date = date(2017, 1, 20)
 
-    analyzer = AnalyzeCoverageStopArea(storage_path=path,
+    analyzer = AnalyzeCoverageStopAreas(storage_path=path,
                                        start_date=start_date,
                                        end_date=end_date,
                                        spark_session=spark,
@@ -60,7 +60,7 @@ def test_coverage_stop_area_count(spark, day, expected_results):
     start_date = date(2017, 1, day)
     end_date = date(2017, 1, day)
 
-    analyzer = AnalyzeCoverageStopArea(storage_path=path,
+    analyzer = AnalyzeCoverageStopAreas(storage_path=path,
                                        start_date=start_date,
                                        end_date=end_date,
                                        spark_session=spark,
