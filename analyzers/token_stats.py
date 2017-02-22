@@ -2,7 +2,7 @@ from pyspark.sql.functions import to_date
 from analyzers.analyzer import Analyzer
 
 
-class AnalyzeToken(Analyzer):
+class AnalyzeTokens(Analyzer):
 
     def collect_data_from_df(self, dataframe):
         if dataframe.count():

@@ -1,13 +1,13 @@
 import os
 from datetime import datetime
-from analyzers import AnalyseUsersSql, AnalyzeToken, AnalyzeRequest,\
+from analyzers import AnalyseUsersSql, AnalyzeTokens, AnalyzeRequest,\
     AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageModes
 from itertools import chain, islice
 
 
 def analyzer_value(value):
     analyzers = {
-        "token_stats": AnalyzeToken,
+        "token_stats": AnalyzeTokens,
         "users": AnalyseUsersSql,
         "requests_calls": AnalyzeRequest,
         "error_stat": AnalyzeErrors,
