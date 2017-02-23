@@ -34,7 +34,7 @@ def test_option_invalid():
 
 def test_analyzer_valid():
     values = {"token_stats": AnalyzeTokens, "users": AnalyseUsersSql, "requests_calls": AnalyzeRequest,
-              "error_stat": AnalyzeErrors, "coverage_stop_area": AnalyzeCoverageStopAreas,
+              "error_stats": AnalyzeErrors, "coverage_stop_areas": AnalyzeCoverageStopAreas,
               "coverage_modes": AnalyzeCoverageModes}
     for value in values:
         assert values[value] == analyzer_value(value)
@@ -42,7 +42,7 @@ def test_analyzer_valid():
 
 def test_analyzer_upper_lower():
     values = {"TOKEN_stats": AnalyzeTokens, "USERS": AnalyseUsersSql, "requests_CALLS": AnalyzeRequest,
-              "ERROR_stat": AnalyzeErrors, "coverage_STOP_area": AnalyzeCoverageStopAreas,
+              "ERROR_stats": AnalyzeErrors, "coverage_STOP_areas": AnalyzeCoverageStopAreas,
               "coverage_MODES": AnalyzeCoverageModes}
     for value in values:
         assert values[value] == analyzer_value(value)

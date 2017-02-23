@@ -12,8 +12,8 @@ def analyzer_value(value):
         "token_stats": AnalyzeTokens,
         "users": AnalyseUsersSql,
         "requests_calls": AnalyzeRequest,
-        "error_stat": AnalyzeErrors,
-        "coverage_stop_area": AnalyzeCoverageStopAreas,
+        "error_stats": AnalyzeErrors,
+        "coverage_stop_areas": AnalyzeCoverageStopAreas,
         "coverage_modes": AnalyzeCoverageModes,
         "coverage_journeys_requests_params": AnalyzeCoverageJourneysRequestsParams
     }

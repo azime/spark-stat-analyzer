@@ -1,5 +1,6 @@
 import psycopg2
 from includes.utils import sub_iterable
+from includes.logger import get_logger
 
 
 class Database(object):
@@ -13,7 +14,8 @@ class Database(object):
         if auto_connect:
             try:
                 self.connect()
-            except psycopg2.OperationalError:
+            except psycopg2.OperationalError as e:
+                get_logger().critical('Cannot connect database, error: {msg}'.format(msg=e.message))
                 raise
 
     def connect(self):
@@ -40,20 +42,40 @@ class Database(object):
         self.cursor.execute(query)
         return [tuple(values) for values in self.cursor.fetchall()]
 
+    def update(self, query, values):
+        try:
+            self.cursor.execute(query.format(schema_=self.schema), values)
+            self.connection.commit()
+        except psycopg2.Error as e:
+            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            self.connection.rollback()
+            raise
+        except TypeError as e:
+            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            self.connection.rollback()
+            raise
+
     def insert(self, table_name, columns, data, start_date=None, end_date=None, delete=True):
         try:
             if delete:
                 query = self.format_delete_query(table_name, start_date, end_date)
                 self.cursor.execute(query)
+            size = len(data)
+            count = 0
             for records in sub_iterable(data, self.insert_count):
                 if len(records):
+                    count += len(records)
+                    get_logger().debug("Insert into {table} {count}/{size}".format(table=table_name,
+                                                                                   count=count,
+                                                                                   size=size))
                     insert_string = self.format_insert_query(table_name, columns, records)
                     self.cursor.execute(insert_string, records)
             self.connection.commit()
         except psycopg2.Error as e:
-            print("Error in insert function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in insert function: {msg}".format(msg=e.message))
             self.connection.rollback()
+            raise
         except TypeError as e:
-            print("Error in insert function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in insert function: {msg}".format(msg=e.message))
             self.connection.rollback()
             raise

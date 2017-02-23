@@ -1,8 +1,8 @@
 from includes.database import Database
-import argparse
 import config
+import argparse
 from pyspark.sql import SparkSession
-from includes import utils
+from includes import utils, logger
 from datetime import datetime
 
 if __name__ == "__main__":
@@ -16,11 +16,13 @@ if __name__ == "__main__":
                         required=True, type=utils.analyzer_value)
 
     args = parser.parse_args()
+
     database = Database(dbname=config.db["dbname"], user=config.db["user"],
                         password=config.db["password"], schema=config.db["schema"],
                         host=config.db['host'], port=config.db['port'],
                         insert_count=config.db['insert_count'])
 
+    logger.init_logger(config.logger.get("level", ""))
     spark_session = SparkSession.builder.appName(__file__).getOrCreate()
 
     analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_session, database)

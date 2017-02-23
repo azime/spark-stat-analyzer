@@ -3,8 +3,8 @@ from glob import glob
 from datetime import timedelta
 from datetime import datetime
 import math
+from includes.logger import get_logger
 import json
-
 
 class Analyzer(object):
     __metaclass__ = ABCMeta
@@ -46,11 +46,12 @@ class Analyzer(object):
             return self.spark_session.read.json(files)
 
     def get_log_analyzer_stats(self, current_datetime):
-        return "[spark-stat-analyzer] [OK] [%s] [%s] [%s] [%d]" %(current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                  self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                  self.analyzer_name,
-                                                                  math.floor((current_datetime - self.created_at).total_seconds()))
+        return "[OK] [%s] [%s] [%s] [%d]" %(current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+                                            self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                                            self.analyzer_name,
+                                            math.floor((current_datetime - self.created_at).total_seconds()))
 
     def terminate(self, current_datetime):
         self.spark_session.sparkContext.stop()
-        print(self.get_log_analyzer_stats(current_datetime))
+        get_logger().debug(self.get_log_analyzer_stats(current_datetime))
+
