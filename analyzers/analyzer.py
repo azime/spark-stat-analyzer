@@ -3,6 +3,7 @@ from glob import glob
 from datetime import timedelta
 from datetime import datetime
 import math
+import json
 
 
 class Analyzer(object):
@@ -16,6 +17,15 @@ class Analyzer(object):
         self.spark_session = spark_session
         self.created_at = kwargs.get("current_datetime", datetime.now())
 
+    @abstractmethod
+    def launch(self):
+        pass
+
+    @property
+    @abstractmethod
+    def analyzer_name(self):
+        pass
+
     def get_files_to_analyze(self):
         treatment_day = self.start_date
         file_list = []
@@ -26,9 +36,14 @@ class Analyzer(object):
             treatment_day += timedelta(days=1)
         return file_list
 
-    @abstractmethod
-    def launch(self):
-        pass
+    def load_data(self, files, rdd_mode=False, separator=','):
+        if rdd_mode:
+            return self.spark_session.sparkContext.textFile(separator.join(files)).map(
+                # json to dict
+                lambda stat: json.loads(stat)
+            )
+        else:
+            return self.spark_session.read.json(files)
 
     def get_log_analyzer_stats(self, current_datetime):
         return "[spark-stat-analyzer] [OK] [%s] [%s] [%s] [%d]" %(current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
@@ -39,8 +54,3 @@ class Analyzer(object):
     def terminate(self, current_datetime):
         self.spark_session.sparkContext.stop()
         print(self.get_log_analyzer_stats(current_datetime))
-
-    @property
-    @abstractmethod
-    def analyzer_name(self):
-        pass

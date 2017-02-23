@@ -1,17 +1,19 @@
 import os
 from datetime import datetime
-from analyzers import token_stat, users_sql, error_stats, requests_calls,  coverage_stop_areas, coverage_journeys_requests_params
+from analyzers import AnalyseUsersSql, AnalyzeTokens, AnalyzeRequest,\
+    AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageModes, AnalyzeWheelchairJourneys
 from itertools import chain, islice
 
 
 def analyzer_value(value):
     analyzers = {
-        "token_stats": token_stat.AnalyzeToken,
-        "users": users_sql.AnalyseUsersSql,
-        "requests_calls": requests_calls.AnalyzeRequest,
-        "error_stats": error_stats.AnalyzeErrors,
-        "coverage_stop_areas": coverage_stop_areas.AnalyzeCoverageStopAreas,
-        "coverage_journeys_requests_params": coverage_journeys_requests_params.AnalyzeWheelchairJourneys
+        "token_stats": AnalyzeTokens,
+        "users": AnalyseUsersSql,
+        "requests_calls": AnalyzeRequest,
+        "error_stat": AnalyzeErrors,
+        "coverage_stop_area": AnalyzeCoverageStopAreas,
+        "coverage_modes": AnalyzeCoverageModes,
+        "coverage_journeys_requests_params": AnalyzeWheelchairJourneys
     }
     lower_value = value.lower()
     if lower_value not in analyzers:
