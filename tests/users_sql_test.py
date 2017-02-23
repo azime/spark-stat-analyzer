@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.users_sql import AnalyseUsersSql
+from analyzers import AnalyseUsersSql
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")

@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.coverage_stop_areas import AnalyzeCoverageStopAreas
+from analyzers import AnalyzeCoverageStopAreas
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")

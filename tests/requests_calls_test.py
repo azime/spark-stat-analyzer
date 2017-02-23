@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.requests_calls import AnalyzeRequest
+from analyzers import AnalyzeRequest
 import os
 from tests.checker import same_list_tuple
 
