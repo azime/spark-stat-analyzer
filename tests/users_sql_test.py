@@ -53,4 +53,4 @@ def test_users_sql_empty_file(spark):
     results = tokenstat.get_data()
     assert len(results) == 0
     assert tokenstat.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
-           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [UsersUpdater] [120]"
+           "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [UsersUpdater] [120]"

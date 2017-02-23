@@ -34,7 +34,7 @@ def test_requests_calls(spark):
 
     assert same_list_tuple(result, expected_results)
     assert analyze_request.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
-           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [RequestCallsUpdater] [120]"
+           "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [RequestCallsUpdater] [120]"
 
 
 def test_requests_calls_without_journeys(spark):

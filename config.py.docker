@@ -9,3 +9,7 @@ db = dict(
     schema = os.getenv('STAT_DATABASE_SCHEMA', 'stat_compiled'),
     insert_count = os.getenv('STAT_DATABASE_INSERT_COUNT', 100),
 )
+
+logger = dict (
+    level = os.getenv('STAT_LOGGER_LEVEL', 'WARNING'),
+)

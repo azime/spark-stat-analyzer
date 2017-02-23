@@ -48,4 +48,4 @@ def test_error_stat(spark):
         assert expected_result in results_to_compare
 
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
-           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [ErrorStatsUpdater] [120]"
+           "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [ErrorStatsUpdater] [120]"
