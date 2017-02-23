@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 import math
 from includes.logger import get_logger
 import json
-
+import os
 
 class Analyzer(object):
     __metaclass__ = ABCMeta
@@ -39,7 +39,7 @@ class Analyzer(object):
         treatment_day = self.start_date
         file_list = []
         while treatment_day <= self.end_date:
-            file_path = glob(self.storage_path + '/' + treatment_day.strftime('%Y/%m/%d') + '/*.json.log*')
+            file_path = glob(os.path.join(self.storage_path, treatment_day.strftime('%Y/%m/%d'), "*.json.log*"))
             if self.storage_path .startswith("/") and len(file_path) > 0:
                 file_list.extend(file_path)
             treatment_day += timedelta(days=1)

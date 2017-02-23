@@ -8,36 +8,33 @@ path = os.getcwd() + "/tests/fixtures/coverage_stop_areas"
 date_2017_02_15 = datetime.utcfromtimestamp(1484473662).date()
 date_2017_02_18 = datetime.utcfromtimestamp(1484758062).date()
 
+
 def test_coverage_stop_area_no_journeys(spark):
     start_date = date(2017, 1, 22)
     end_date = date(2017, 1, 22)
 
-    analyzer = AnalyzeCoverageStopAreas(storage_path=path,
-                                       start_date=start_date,
-                                       end_date=end_date,
-                                       spark_session=spark,
-                                       database=None,
-                                       current_datetime=datetime(2017, 2, 15, 15, 10))
+    analyzer = AnalyzeCoverageStopAreas(storage_path=path, start_date=start_date, end_date=end_date,
+                                        spark_session=spark, database=None,
+                                        current_datetime=datetime(2017, 2, 15, 15, 10))
 
     results = analyzer.get_data(rdd_mode=True)
     assert len(results) == 0
+
 
 def test_coverage_stop_area_no_valid_found(spark):
     start_date = date(2017, 1, 20)
     end_date = date(2017, 1, 20)
 
-    analyzer = AnalyzeCoverageStopAreas(storage_path=path,
-                                       start_date=start_date,
-                                       end_date=end_date,
-                                       spark_session=spark,
-                                       database=None,
-                                       current_datetime=datetime(2017, 2, 15, 15, 10))
+    analyzer = AnalyzeCoverageStopAreas(storage_path=path, start_date=start_date, end_date=end_date,
+                                        spark_session=spark, database=None,
+                                        current_datetime=datetime(2017, 2, 15, 15, 10))
 
     results = analyzer.get_data(rdd_mode=True)
     assert len(results) == 0
 
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
            "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageStopAreas] [120]"
+
 
 @pytest.mark.parametrize("day,expected_results", [
     (15,
@@ -60,12 +57,9 @@ def test_coverage_stop_area_count(spark, day, expected_results):
     start_date = date(2017, 1, day)
     end_date = date(2017, 1, day)
 
-    analyzer = AnalyzeCoverageStopAreas(storage_path=path,
-                                       start_date=start_date,
-                                       end_date=end_date,
-                                       spark_session=spark,
-                                       database=None,
-                                       current_datetime=datetime(2017, 2, 15, 15, 10))
+    analyzer = AnalyzeCoverageStopAreas(storage_path=path, start_date=start_date, end_date=end_date,
+                                        spark_session=spark, database=None,
+                                        current_datetime=datetime(2017, 2, 15, 15, 10))
 
     results = analyzer.get_data(rdd_mode=True)
 

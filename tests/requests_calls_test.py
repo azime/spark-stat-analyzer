@@ -12,12 +12,8 @@ def test_requests_calls(spark):
     start_date = date(2017, 1, 1)
     end_date = date(2017, 1, 1)
 
-    analyze_request = AnalyzeRequest(storage_path=path,
-                                     start_date=start_date,
-                                     end_date=end_date,
-                                     spark_session=spark,
-                                     database=None,
-                                     current_datetime=datetime(2017, 2, 15, 15, 10))
+    analyze_request = AnalyzeRequest(storage_path=path, start_date=start_date, end_date=end_date,
+                                     spark_session=spark, database=None, current_datetime=datetime(2017, 2, 15, 15, 10))
 
     files = analyze_request.get_files_to_analyze()
 
@@ -42,10 +38,7 @@ def test_requests_calls_without_journeys(spark):
     start_date = date(2017, 1, 2)
     end_date = date(2017, 1, 2)
 
-    analyze_request = AnalyzeRequest(storage_path=path,
-                                     start_date=start_date,
-                                     end_date=end_date,
-                                     spark_session=spark,
+    analyze_request = AnalyzeRequest(storage_path=path, start_date=start_date, end_date=end_date, spark_session=spark,
                                      database=None)
 
     files = analyze_request.get_files_to_analyze()
