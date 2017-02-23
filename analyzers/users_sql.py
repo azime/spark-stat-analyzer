@@ -1,7 +1,7 @@
 from datetime import datetime
 from pyspark.sql.window import Window
 from pyspark.sql.functions import first, desc
-from analyzers.analyzer import Analyzer
+from analyzers import Analyzer
 from includes.logger import get_logger
 
 

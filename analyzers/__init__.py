@@ -1,3 +1,4 @@
+from analyzer import Analyzer
 from error_stats import AnalyzeErrors
 from coverage_modes import AnalyzeCoverageModes
 from coverage_stop_areas import AnalyzeCoverageStopAreas
@@ -5,4 +6,4 @@ from coverage_journeys_requests_params import AnalyzeCoverageJourneysRequestsPar
 from requests_calls import AnalyzeRequest
 from token_stats import AnalyzeTokens
 from users_sql import AnalyseUsersSql
-from analyzer import Analyzer
+from coverage_journeys_transfers import AnalyzeCoverageJourneysTransfers

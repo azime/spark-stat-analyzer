@@ -1,10 +1,10 @@
 from abc import abstractmethod, ABCMeta
 from glob import glob
-from datetime import timedelta
-from datetime import datetime
+from datetime import timedelta, datetime
 import math
 from includes.logger import get_logger
 import json
+
 
 class Analyzer(object):
     __metaclass__ = ABCMeta

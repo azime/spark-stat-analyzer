@@ -1,4 +1,4 @@
-from analyzers.analyzer import Analyzer
+from analyzers import Analyzer
 from pyspark.sql.functions import when, from_unixtime, lit
 
 
