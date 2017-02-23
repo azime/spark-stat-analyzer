@@ -3,7 +3,7 @@ from datetime import date
 import os
 from includes.utils import check_and_get_path, date_format, analyzer_value, sub_iterable
 from analyzers import AnalyzeTokens, AnalyseUsersSql, AnalyzeRequest, \
-    AnalyzeCoverageModes, AnalyzeErrors, AnalyzeCoverageStopAreas
+    AnalyzeCoverageModes, AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageJourneysTransfers
 from tests.checker import same_list_tuple
 
 
@@ -35,7 +35,8 @@ def test_option_invalid():
 def test_analyzer_valid():
     values = {"token_stats": AnalyzeTokens, "users": AnalyseUsersSql, "requests_calls": AnalyzeRequest,
               "error_stats": AnalyzeErrors, "coverage_stop_areas": AnalyzeCoverageStopAreas,
-              "coverage_modes": AnalyzeCoverageModes}
+              "coverage_modes": AnalyzeCoverageModes,
+              "coverage_journeys_transfers": AnalyzeCoverageJourneysTransfers}
     for value in values:
         assert values[value] == analyzer_value(value)
 
@@ -43,7 +44,8 @@ def test_analyzer_valid():
 def test_analyzer_upper_lower():
     values = {"TOKEN_stats": AnalyzeTokens, "USERS": AnalyseUsersSql, "requests_CALLS": AnalyzeRequest,
               "ERROR_stats": AnalyzeErrors, "coverage_STOP_areas": AnalyzeCoverageStopAreas,
-              "coverage_MODES": AnalyzeCoverageModes}
+              "coverage_MODES": AnalyzeCoverageModes,
+              "coverage_JOURNEYS_transfers": AnalyzeCoverageJourneysTransfers}
     for value in values:
         assert values[value] == analyzer_value(value)
 

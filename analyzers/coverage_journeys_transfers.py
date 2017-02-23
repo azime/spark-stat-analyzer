@@ -1,5 +1,5 @@
 from datetime import datetime
-from analyzers.analyzer import Analyzer
+from analyzers import Analyzer
 
 
 class AnalyzeCoverageJourneysTransfers(Analyzer):

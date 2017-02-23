@@ -1,5 +1,5 @@
 from pyspark.sql.functions import to_date
-from analyzer import Analyzer
+from analyzers import Analyzer
 from includes.logger import get_logger
 
 

@@ -1,5 +1,5 @@
 from pyspark.sql.functions import when, from_unixtime
-from analyzers.analyzer import Analyzer
+from analyzers import Analyzer
 
 
 class AnalyzeErrors(Analyzer):
