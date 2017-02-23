@@ -56,4 +56,4 @@ def test_journeys_transfers_coverage_modes_without_journey(spark):
     results = analyzer.get_data()
     assert len(results) == 0
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
-           "[spark-stat-analyzer] [OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageJourneysTransfers] [120]"
+           "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageJourneysTransfers] [120]"
