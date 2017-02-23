@@ -1,8 +1,8 @@
-from analyzer import Analyzer
-import json
+from analyzers.analyzer import Analyzer
 from datetime import datetime
+import json
 
-class AnalyzeWheelchairJourneys(Analyzer):
+class AnalyzeCoverageJourneysRequestsParams(Analyzer):
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
         result = []
@@ -39,11 +39,11 @@ class AnalyzeWheelchairJourneys(Analyzer):
     def truncate_and_insert(self, data):
         if len(data):
             self.database.insert(
-                    "coverage_journeys_requests_params",
-                    ("request_date", "region_id", "is_internal_call", "nb_wheelchair"),
-                    data,
-                    self.start_date,
-                    self.end_date
+                "coverage_journeys_requests_params",
+                ("request_date", "region_id", "is_internal_call", "nb_wheelchair"),
+                data,
+                self.start_date,
+                self.end_date
             )
 
     def launch(self):
@@ -52,4 +52,4 @@ class AnalyzeWheelchairJourneys(Analyzer):
 
     @property
     def analyzer_name(self):
-        return "CoverageJourneysRequestParams"
+        return "CoverageJourneysRequestsParams"

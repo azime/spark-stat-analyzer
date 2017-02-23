@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.coverage_journeys_request_params import AnalyzeWheelchairJourneys
+from analyzers.coverage_journeys_requests_params import AnalyzeCoverageJourneysRequestsParams
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")
@@ -10,7 +10,7 @@ def test_no_journeys(spark):
     start_date = date(2017, 1, 20)
     end_date = date(2017, 1, 20)
 
-    analyzer = AnalyzeWheelchairJourneys(storage_path=path,
+    analyzer = AnalyzeCoverageJourneysRequestsParams(storage_path=path,
                                          start_date=start_date,
                                          end_date=end_date,
                                          spark_session=spark,
@@ -24,7 +24,7 @@ def test_no_wheelchair_journeys_request(spark):
     start_date = date(2017, 1, 21)
     end_date = date(2017, 1, 21)
 
-    analyzer = AnalyzeWheelchairJourneys(storage_path=path,
+    analyzer = AnalyzeCoverageJourneysRequestsParams(storage_path=path,
                                          start_date=start_date,
                                          end_date=end_date,
                                          spark_session=spark,
@@ -42,7 +42,7 @@ def test_count_wheelchair_journeys(spark):
         (datetime.utcfromtimestamp(1484993662).date(),u'fr-bar',0,1)
     ]
 
-    analyzer = AnalyzeWheelchairJourneys(storage_path=path,
+    analyzer = AnalyzeCoverageJourneysRequestsParams(storage_path=path,
                                             start_date=start_date,
                                             end_date=end_date,
                                             spark_session=spark,
