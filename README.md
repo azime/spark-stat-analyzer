@@ -30,7 +30,7 @@ Create config.py file from template config.py.dist and adapt them
 ```
 
 where:
-* analyzer: analyzer name, possible value : token_stats, users, requests_calls and error_stats
+* analyzer: analyzer name, possible value : token_stats, users, requests_calls, error_stats, coverage_stop_areas, coverage_modes, coverage_journeys_transfers or coverage_journeys_requests_params
 
 * start_date and end_date is in YYYY-MM-DD format
 

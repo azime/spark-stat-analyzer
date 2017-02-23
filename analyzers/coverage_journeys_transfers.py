@@ -33,17 +33,6 @@ class AnalyzeCoverageJourneysTransfers(Analyzer):
                 )
         return result
 
-    def collect_data(self, rdd):
-        if rdd.count():
-            data = rdd.flatMap(
-                self.get_tuples_from_stat_dict
-            ).reduceByKey(
-                lambda a, b: (a + b)
-            ).collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in data]
-        else:
-            return []
-
     def truncate_and_insert(self, data):
         if len(data):
             columns = ('region_id', 'nb_transfers', 'is_internal_call', "request_date", 'nb')

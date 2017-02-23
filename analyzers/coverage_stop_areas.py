@@ -35,39 +35,24 @@ class AnalyzeCoverageStopAreas(Analyzer):
 
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
-        result = []
-        for stop_area in AnalyzeCoverageStopAreas.get_stop_areas(stat_dict):
-            result.append(
+        return map(
+            lambda stop_area:
+            (
                 (
-                    (
-                        stat_dict['coverages'][0]['region_id'],  # region_id
-                        stop_area['stop_area_id'],
-                        stop_area['stop_area_name'],
-                        stop_area['city_id'],
-                        stop_area['city_name'],
-                        stop_area['city_insee'],
-                        stop_area['department_code'],
-                        1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
-                        datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
-                    ),
-                    (
-                        1
-                    )
-                )
-            )
-
-        return result
-
-    def collect_data(self, rdd):
-        if rdd.count():
-            coverage_stop_areas = rdd.flatMap(
-                self.get_tuples_from_stat_dict
-            ).reduceByKey(
-                lambda a, b: (a + b)
-            ).collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_stop_areas]
-        else:
-            return []
+                    stat_dict['coverages'][0]['region_id'],
+                    stop_area['stop_area_id'],
+                    stop_area['stop_area_name'],
+                    stop_area['city_id'],
+                    stop_area['city_name'],
+                    stop_area['city_insee'],
+                    stop_area['department_code'],
+                    1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
+                    datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
+                ),
+                1
+            ),
+            AnalyzeCoverageStopAreas.get_stop_areas(stat_dict)
+        )
 
     def truncate_and_insert(self, data):
         if len(data):

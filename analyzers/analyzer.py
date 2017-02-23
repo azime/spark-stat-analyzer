@@ -26,9 +26,20 @@ class Analyzer(object):
     def analyzer_name(self):
         pass
 
-    @abstractmethod
-    def collect_data(self, df):
+    @staticmethod
+    def get_tuples_from_stat_dict(stat_dict):
         pass
+
+    def collect_data(self, dataframe):
+        if dataframe.count():
+            coverage_modes = dataframe.flatMap(
+                self.get_tuples_from_stat_dict
+            ).reduceByKey(
+                lambda a, b: a + b
+            ).collect()
+            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_modes]
+        else:
+            return []
 
     def get_data(self, rdd_mode=False, separator=','):
         files = self.get_files_to_analyze()
@@ -63,4 +74,3 @@ class Analyzer(object):
     def terminate(self, current_datetime):
         self.spark_session.sparkContext.stop()
         get_logger().info(self.get_log_analyzer_stats(current_datetime))
-

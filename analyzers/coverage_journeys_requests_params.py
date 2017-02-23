@@ -21,14 +21,6 @@ class AnalyzeCoverageJourneysRequestsParams(Analyzer):
         # builds (tuple, count) pairs to allow counting
         return map(lambda s: (s, 1), result)
 
-    def collect_data(self, rdd):
-        if rdd.count():
-            wheelchair_stats = rdd.flatMap(self.get_tuples_from_stat_dict) \
-                .reduceByKey(lambda a, b: a + b) \
-                .collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in wheelchair_stats]
-        return []
-
     def truncate_and_insert(self, data):
         if len(data):
             self.database.insert(
