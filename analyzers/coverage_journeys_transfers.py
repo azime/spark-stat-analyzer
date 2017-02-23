@@ -45,13 +45,8 @@ class AnalyzeCoverageJourneysTransfers(Analyzer):
             return []
 
     def get_data(self):
-        import json
         files = self.get_files_to_analyze()
-
-        rdd = self.spark_session.sparkContext.textFile(','.join(files)).map(
-            # json to dict
-            lambda stat: json.loads(stat)
-        )
+        rdd = self.load_data(files, rdd_mode=True)
         return self.collect_data_from_df(rdd)
 
     def truncate_and_insert(self, data):

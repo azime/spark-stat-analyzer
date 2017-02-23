@@ -5,4 +5,5 @@ from coverage_journeys_requests_params import AnalyzeCoverageJourneysRequestsPar
 from requests_calls import AnalyzeRequest
 from token_stats import AnalyzeTokens
 from users_sql import AnalyseUsersSql
+from coverage_journeys_transfers import AnalyzeCoverageJourneysTransfers
 from analyzer import Analyzer

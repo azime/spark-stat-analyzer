@@ -1,7 +1,7 @@
 import pytest
 import os
 from datetime import date, datetime
-from analyzers.coverage_journeys_transfers import AnalyzeCoverageJourneysTransfers
+from analyzers import AnalyzeCoverageJourneysTransfers
 from checker import same_list_tuple
 
 pytestmark = pytest.mark.usefixtures("spark")
