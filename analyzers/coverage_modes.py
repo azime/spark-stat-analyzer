@@ -53,7 +53,7 @@ class AnalyzeCoverageModes(Analyzer):
             )
         return result
 
-    def collect_data_from_df(self, rdd):
+    def collect_data(self, rdd):
         if rdd.count():
             coverage_modes = rdd.flatMap(
                 self.get_tuples_from_stat_dict
@@ -64,11 +64,6 @@ class AnalyzeCoverageModes(Analyzer):
         else:
             return []
 
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        rdd = self.load_data(files, rdd_mode=True)
-        return self.collect_data_from_df(rdd)
-
     def truncate_and_insert(self, data):
         if len(data):
             columns = ('region_id', 'type', 'mode', 'commercial_mode_id', 'commercial_mode_name',
@@ -78,7 +73,7 @@ class AnalyzeCoverageModes(Analyzer):
                                  end_date=self.end_date)
 
     def launch(self):
-        coverage_modes = self.get_data()
+        coverage_modes = self.get_data(rdd_mode=True)
         self.truncate_and_insert(coverage_modes)
 
     @property

@@ -5,7 +5,7 @@ from includes.logger import get_logger
 
 class AnalyzeTokens(Analyzer):
 
-    def collect_data_from_df(self, dataframe):
+    def collect_data(self, dataframe):
         if dataframe.count():
             dfProcessed = dataframe.withColumn('request_date_ts', dataframe.request_date.cast('timestamp'))
             tokenStats = dfProcessed.groupBy(to_date('request_date_ts').alias('request_date_trunc'), 'token').count()
@@ -15,11 +15,6 @@ class AnalyzeTokens(Analyzer):
         else:
             get_logger().debug("Empty data frame.")
             return []
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        df = self.spark_session.read.json(files)
-        return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):
         if len(data):

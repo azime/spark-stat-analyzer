@@ -7,7 +7,7 @@ from includes.logger import get_logger
 
 class AnalyseUsersSql(Analyzer):
 
-    def collect_data_from_df(self, dataframe):
+    def collect_data(self, dataframe):
         if dataframe.count():
             parition_by_user_id = Window.partitionBy("user_id")
             wasc = parition_by_user_id.orderBy("request_date")
@@ -25,11 +25,6 @@ class AnalyseUsersSql(Analyzer):
         else:
             get_logger().debug("Empty data frame.")
             return []
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        df = self.load_data(files)
-        return self.collect_data_from_df(df)
 
     def insert_or_update(self, data):
         users_in_database = dict(self.database.select_from_table("users", ["id", "user_name"]))

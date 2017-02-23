@@ -26,6 +26,15 @@ class Analyzer(object):
     def analyzer_name(self):
         pass
 
+    @abstractmethod
+    def collect_data(self, df):
+        pass
+
+    def get_data(self, rdd_mode=False, separator=','):
+        files = self.get_files_to_analyze()
+        df = self.load_data(files, rdd_mode, separator)
+        return self.collect_data(df)
+
     def get_files_to_analyze(self):
         treatment_day = self.start_date
         file_list = []

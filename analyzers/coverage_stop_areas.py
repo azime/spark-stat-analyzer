@@ -58,7 +58,7 @@ class AnalyzeCoverageStopAreas(Analyzer):
 
         return result
 
-    def collect_data_from_df(self, rdd):
+    def collect_data(self, rdd):
         if rdd.count():
             coverage_stop_areas = rdd.flatMap(
                 self.get_tuples_from_stat_dict
@@ -68,11 +68,6 @@ class AnalyzeCoverageStopAreas(Analyzer):
             return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_stop_areas]
         else:
             return []
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        rdd = self.load_data(files, rdd_mode=True)
-        return self.collect_data_from_df(rdd)
 
     def truncate_and_insert(self, data):
         if len(data):
@@ -90,7 +85,7 @@ class AnalyzeCoverageStopAreas(Analyzer):
                                  , data, self.start_date, self.end_date)
 
     def launch(self):
-        coverage_stop_areas = self.get_data()
+        coverage_stop_areas = self.get_data(rdd_mode=True)
         self.truncate_and_insert(coverage_stop_areas)
 
     @property

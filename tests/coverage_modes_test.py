@@ -40,7 +40,7 @@ def test_coverage_modes_count(spark):
     analyzer = AnalyzeCoverageModes(storage_path=path, start_date=date(2017, 1, 15),
                                     end_date=date(2017, 1, 15), spark_session=spark, database=None)
 
-    results = analyzer.get_data()
+    results = analyzer.get_data(rdd_mode=True)
     assert same_list_tuple(results, expected_results)
 
 
@@ -52,7 +52,7 @@ def test_coverage_modes_without_journey(spark):
                                     database=None,
                                     current_datetime=datetime(2017, 2, 15, 15, 10))
 
-    results = analyzer.get_data()
+    results = analyzer.get_data(rdd_mode=True)
     assert len(results) == 0
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
        "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageModes] [120]"

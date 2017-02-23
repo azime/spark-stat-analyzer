@@ -19,7 +19,7 @@ def test_coverage_stop_area_no_journeys(spark):
                                        database=None,
                                        current_datetime=datetime(2017, 2, 15, 15, 10))
 
-    results = analyzer.get_data()
+    results = analyzer.get_data(rdd_mode=True)
     assert len(results) == 0
 
 def test_coverage_stop_area_no_valid_found(spark):
@@ -33,7 +33,7 @@ def test_coverage_stop_area_no_valid_found(spark):
                                        database=None,
                                        current_datetime=datetime(2017, 2, 15, 15, 10))
 
-    results = analyzer.get_data()
+    results = analyzer.get_data(rdd_mode=True)
     assert len(results) == 0
 
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
@@ -67,7 +67,7 @@ def test_coverage_stop_area_count(spark, day, expected_results):
                                        database=None,
                                        current_datetime=datetime(2017, 2, 15, 15, 10))
 
-    results = analyzer.get_data()
+    results = analyzer.get_data(rdd_mode=True)
 
     assert len(results) == len(expected_results)
 

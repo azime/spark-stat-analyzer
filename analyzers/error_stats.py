@@ -3,7 +3,7 @@ from analyzers import Analyzer
 
 
 class AnalyzeErrors(Analyzer):
-    def collect_data_from_df(self, df):
+    def collect_data(self, df):
         return df.select(
             when(df['coverages'][0]['region_id'].isNull(), '').otherwise(df['coverages'][0]['region_id']).
             alias('region_id'),
@@ -17,11 +17,6 @@ class AnalyzeErrors(Analyzer):
             .groupBy('region_id', 'api', 'request_date', 'user_id', 'application_name', 'err_id', 'is_internal_call')\
             .count()\
             .collect()
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        df = self.load_data(files)
-        return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):
         if len(data):
