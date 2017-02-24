@@ -53,5 +53,5 @@ class Analyzer(object):
 
     def terminate(self, current_datetime):
         self.spark_session.sparkContext.stop()
-        get_logger().debug(self.get_log_analyzer_stats(current_datetime))
+        get_logger().info(self.get_log_analyzer_stats(current_datetime))
 
