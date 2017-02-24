@@ -1,6 +1,6 @@
 import pytest
 from datetime import date, datetime
-from analyzers.coverage_journeys_requests_params import AnalyzeCoverageJourneysRequestsParams
+from analyzers import AnalyzeCoverageJourneysRequestsParams
 import os
 
 pytestmark = pytest.mark.usefixtures("spark")
