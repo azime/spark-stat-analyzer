@@ -16,19 +16,19 @@ def test_get_tuples_from_stat_dict_without_journey():
 def test_get_tuples_from_stat_dict_with_empty_journeys():
     data = {"a": 1, "journeys": []}
     result = AnalyzeCoverageModes.get_tuples_from_stat_dict(data)
-    assert result == []
+    assert result == [v for v in result]
 
 
 def test_get_tuples_from_stat_dict_without_sections():
     data = {"a": 1, "journeys": [{"user_name": "bob", "token": "1234"}]}
     result = AnalyzeCoverageModes.get_tuples_from_stat_dict(data)
-    assert result == []
+    assert result == [v for v in result]
 
 
 def test_get_tuples_from_stat_dict_without_coverage():
     data = {"a": 1, "journeys": [{"user_name": "bob", "token": "1234"}]}
     result = AnalyzeCoverageModes.get_tuples_from_stat_dict(data)
-    assert result == []
+    assert result == [v for v in result]
 
 
 def test_coverage_modes_count(spark):
@@ -41,7 +41,7 @@ def test_coverage_modes_count(spark):
                                     spark_session=spark, database=None)
 
     results = analyzer.get_data(rdd_mode=True)
-    assert same_list_tuple(results, expected_results)
+    assert same_list_tuple([v for v in results], expected_results)
 
 
 def test_coverage_modes_without_journey(spark):
@@ -52,6 +52,6 @@ def test_coverage_modes_without_journey(spark):
                                     database=None, current_datetime=datetime(2017, 2, 15, 15, 10))
 
     results = analyzer.get_data(rdd_mode=True)
-    assert len(results) == 0
+    assert len([v for v in results]) == 0
     assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
        "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageModes] [120]"

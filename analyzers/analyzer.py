@@ -6,6 +6,7 @@ from includes.logger import get_logger
 import json
 import os
 
+
 class Analyzer(object):
     __metaclass__ = ABCMeta
 

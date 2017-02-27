@@ -66,8 +66,8 @@ class Database(object):
                 if len(records):
                     count += len(records)
                     get_logger().info("Insert into {table} {count}/{size}".format(table=table_name,
-                                                                                   count=count,
-                                                                                   size=size))
+                                                                                  count=count,
+                                                                                  size=size))
                     insert_string = self.format_insert_query(table_name, columns, records)
                     self.cursor.execute(insert_string, records)
             self.connection.commit()
