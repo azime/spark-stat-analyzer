@@ -1,6 +1,7 @@
 from analyzers import Analyzer
 from datetime import datetime
 
+
 class AnalyzeCoverageJourneysRequestsParams(Analyzer):
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
