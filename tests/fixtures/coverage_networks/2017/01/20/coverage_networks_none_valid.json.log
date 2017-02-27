@@ -1,0 +1,5 @@
+{"req_id":0}
+{"req_id":1,"journeys":[]}
+{"req_id":2,"journeys":[{"journey_id":21,"sections":[{"network_id": "", "section_id":211,"from_id":"sa_1","to_id":"sa_2"},{"type": "another_wrong_type"}]}]}
+{"req_id":2,"journeys":[{"journey_id":21,"sections":[{"section_id":211,"from_id":"sa_1","to_id":"sa_2"},{"type": "another_wrong_type"}]}]}
+{"req_id":4,"journeys":[{"some_attribute": "some_value"}]}

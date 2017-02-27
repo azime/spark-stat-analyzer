@@ -8,3 +8,4 @@ from analyzers.token_stats import AnalyzeTokens
 from analyzers.users_sql import AnalyseUsersSql
 from analyzers.coverage_journeys_transfers import AnalyzeCoverageJourneysTransfers
 from analyzers.coverage_journeys import AnalyzeCoverageJourneys
+from analyzers.coverage_networks import AnalyzeCoverageNetworks
