@@ -63,7 +63,7 @@ class AnalyzeCoverageStopAreas(Analyzer):
             coverage_stop_areas = rdd.flatMap(
                 self.get_tuples_from_stat_dict
             ).reduceByKey(
-                lambda (a), (b): (a + b)
+                lambda a, b: (a + b)
             ).collect()
             return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_stop_areas]
         else:

@@ -2,7 +2,7 @@ import pytest
 import os
 from datetime import date, datetime
 from analyzers import AnalyzeCoverageModes
-from checker import same_list_tuple
+from tests.checker import same_list_tuple
 
 pytestmark = pytest.mark.usefixtures("spark")
 

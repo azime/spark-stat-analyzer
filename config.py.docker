@@ -11,5 +11,5 @@ db = dict(
 )
 
 logger = dict (
-    level = os.getenv('STAT_LOGGER_LEVEL', 'WARNING'),
+    level = os.getenv('STAT_LOGGER_LEVEL', 'INFO'),
 )

@@ -1,6 +1,5 @@
-from analyzers.analyzer import Analyzer
+from analyzers import Analyzer
 from datetime import datetime
-import json
 
 class AnalyzeCoverageJourneysRequestsParams(Analyzer):
     @staticmethod
