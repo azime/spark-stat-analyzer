@@ -1,0 +1,11 @@
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo","journeys":[]}
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo"}
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1"]}
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-foo"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-bar"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-bar"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-bar"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
+{"coverages":[{"region_id":"fr-bar"}],"request_date":1485011200,"user_name":"foo","journeys":["journeys_1", "journeys_2"]}
