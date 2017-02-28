@@ -1,4 +1,4 @@
-from analyzers import Analyzer
+from analyzers.analyzer import Analyzer
 from datetime import datetime
 
 
@@ -21,19 +21,6 @@ class AnalyzeCoverageJourneysRequestsParams(Analyzer):
         # builds (tuple, count) pairs to allow counting
         return map(lambda s: (s, 1), result)
 
-    def collect_data_from_df(self, rdd):
-        if rdd.count():
-            wheelchair_stats = rdd.flatMap(self.get_tuples_from_stat_dict) \
-                .reduceByKey(lambda a, b: a + b) \
-                .collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in wheelchair_stats]
-        return []
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        rdd = self.load_data(files, rdd_mode=True)
-        return self.collect_data_from_df(rdd)
-
     def truncate_and_insert(self, data):
         if len(data):
             self.database.insert(
@@ -45,7 +32,7 @@ class AnalyzeCoverageJourneysRequestsParams(Analyzer):
             )
 
     def launch(self):
-        wheelchair_stats = self.get_data()
+        wheelchair_stats = self.get_data(rdd_mode=True)
         self.truncate_and_insert(wheelchair_stats)
 
     @property

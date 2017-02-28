@@ -29,45 +29,24 @@ class AnalyzeCoverageModes(Analyzer):
 
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
-        result = []
-        for type_and_mode in AnalyzeCoverageModes.get_modes(stat_dict):
-            result.append(
+        return map(
+            lambda val:
+            (
                 (
-                    (
-                        (
-                            stat_dict['coverages'][0]['region_id'],
-                            type_and_mode.get("type"),
-                            type_and_mode.get("mode", ""),
-                            type_and_mode.get("commercial_mode_id", ""),
-                            type_and_mode.get("commercial_mode_name", ""),
-                            # is_internal_call
-                            1 if 'canaltp' in stat_dict['user_name'] else 0,
-                            # request_date
-                            datetime.utcfromtimestamp(stat_dict['request_date']).date()
-                        )
-                    ),
-                    (
-                        1
-                    )
-                )
-            )
-        return result
-
-    def collect_data_from_df(self, rdd):
-        if rdd.count():
-            coverage_modes = rdd.flatMap(
-                self.get_tuples_from_stat_dict
-            ).reduceByKey(
-                lambda a, b: (a + b)
-            ).collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_modes]
-        else:
-            return []
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        rdd = self.load_data(files, rdd_mode=True)
-        return self.collect_data_from_df(rdd)
+                    stat_dict['coverages'][0]['region_id'],
+                    val.get("type"),
+                    val.get("mode", ""),
+                    val.get("commercial_mode_id", ""),
+                    val.get("commercial_mode_name", ""),
+                    # is_internal_call
+                    1 if 'canaltp' in stat_dict['user_name'] else 0,
+                    # request_date
+                    datetime.utcfromtimestamp(stat_dict['request_date']).date()
+                ),
+                1
+            ),
+            AnalyzeCoverageModes.get_modes(stat_dict)
+        )
 
     def truncate_and_insert(self, data):
         if len(data):
@@ -78,7 +57,7 @@ class AnalyzeCoverageModes(Analyzer):
                                  end_date=self.end_date)
 
     def launch(self):
-        coverage_modes = self.get_data()
+        coverage_modes = self.get_data(rdd_mode=True)
         self.truncate_and_insert(coverage_modes)
 
     @property

@@ -1,4 +1,3 @@
-import json
 from analyzers import Analyzer
 from datetime import datetime
 
@@ -9,7 +8,7 @@ class AnalyzeCoverageNetworks(Analyzer):
         for journey in stat_dict.get('journeys', []):
             networks_of_journey = []
             for section in journey.get('sections', []):
-                if section.get('network_id', '') == '':
+                if not section.get('network_id', None):
                     continue
 
                 networks_dict = {
@@ -23,40 +22,20 @@ class AnalyzeCoverageNetworks(Analyzer):
 
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
-        result = []
-        for network in AnalyzeCoverageNetworks.get_networks(stat_dict):
-            result.append(
+        return map(
+            lambda network:
+            (
                 (
-                    (
-                        stat_dict['coverages'][0]['region_id'],  # region_id
-                        network['network_id'],
-                        network['network_name'],
-                        1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
-                        datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
-                    ),
-                    (
-                        1
-                    )
-                )
-            )
-
-        return result
-
-    def collect_data_from_df(self, rdd):
-        if rdd.count():
-            coverage_stop_areas = rdd.flatMap(
-                self.get_tuples_from_stat_dict
-            ).reduceByKey(
-                lambda a, b: (a + b)
-            ).collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_stop_areas]
-        else:
-            return []
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        rdd = self.load_data(files, rdd_mode=True)
-        return self.collect_data_from_df(rdd)
+                    stat_dict['coverages'][0]['region_id'],  # region_id
+                    network['network_id'],
+                    network['network_name'],
+                    1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
+                    datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
+                ),
+                1
+            ),
+            AnalyzeCoverageNetworks.get_networks(stat_dict)
+        )
 
     def truncate_and_insert(self, data):
         if len(data):
@@ -70,7 +49,7 @@ class AnalyzeCoverageNetworks(Analyzer):
                                  , data, self.start_date, self.end_date)
 
     def launch(self):
-        coverage_stop_areas = self.get_data()
+        coverage_stop_areas = self.get_data(rdd_mode=True)
         self.truncate_and_insert(coverage_stop_areas)
 
     @property

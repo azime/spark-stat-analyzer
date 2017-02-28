@@ -20,8 +20,11 @@ def test_count_journeys(spark):
                                        spark_session=spark,
                                        database=None,
                                        current_datetime=datetime(2017, 2, 15, 15, 10))
-    results = analyzer.get_data()
+    results = analyzer.get_data(rdd_mode=True)
 
     assert len(results) == len(expected_results)
     for result in results:
         assert result in expected_results
+
+    assert analyzer.get_log_analyzer_stats(datetime(2017, 2, 15, 15, 12)) == \
+           "[OK] [2017-02-15 15:12:00] [2017-02-15 15:10:00] [CoverageJourneys] [120]"

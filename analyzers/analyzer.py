@@ -4,6 +4,7 @@ from datetime import timedelta, datetime
 import math
 from includes.logger import get_logger
 import json
+import os
 
 
 class Analyzer(object):
@@ -26,11 +27,31 @@ class Analyzer(object):
     def analyzer_name(self):
         pass
 
+    @staticmethod
+    def get_tuples_from_stat_dict(stat_dict):
+        pass
+
+    def collect_data(self, dataframe):
+        if dataframe.count():
+            coverage_modes = dataframe.flatMap(
+                self.get_tuples_from_stat_dict
+            ).reduceByKey(
+                lambda a, b: a + b
+            ).collect()
+            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_modes]
+        else:
+            return []
+
+    def get_data(self, rdd_mode=False, separator=','):
+        files = self.get_files_to_analyze()
+        df = self.load_data(files, rdd_mode, separator)
+        return self.collect_data(df)
+
     def get_files_to_analyze(self):
         treatment_day = self.start_date
         file_list = []
         while treatment_day <= self.end_date:
-            file_path = glob(self.storage_path + '/' + treatment_day.strftime('%Y/%m/%d') + '/*.json.log*')
+            file_path = glob(os.path.join(self.storage_path, treatment_day.strftime('%Y/%m/%d'), "*.json.log*"))
             if self.storage_path .startswith("/") and len(file_path) > 0:
                 file_list.extend(file_path)
             treatment_day += timedelta(days=1)
@@ -54,4 +75,3 @@ class Analyzer(object):
     def terminate(self, current_datetime):
         self.spark_session.sparkContext.stop()
         get_logger().info(self.get_log_analyzer_stats(current_datetime))
-

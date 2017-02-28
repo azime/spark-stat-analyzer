@@ -5,6 +5,7 @@ import os
 
 pytestmark = pytest.mark.usefixtures("spark")
 
+
 def test_token_stat(spark):
     path = os.getcwd() + "/tests/fixtures/token_stat"
     start_date = date(2017, 1, 15)

@@ -5,17 +5,14 @@ import os
 
 pytestmark = pytest.mark.usefixtures("spark")
 
+
 def test_error_stat(spark):
     path = os.getcwd() + "/tests/fixtures/error_stat"
     start_date = date(2017, 1, 15)
     end_date = date(2017, 1, 15)
 
-    analyzer = AnalyzeErrors(storage_path=path,
-                             start_date=start_date,
-                             end_date=end_date,
-                             spark_session=spark,
-                             database=None,
-                             current_datetime=datetime(2017, 2, 15, 15, 10))
+    analyzer = AnalyzeErrors(storage_path=path, start_date=start_date, end_date=end_date, spark_session=spark,
+                             database=None, current_datetime=datetime(2017, 2, 15, 15, 10))
 
     results = analyzer.get_data()
     # each record have a field that change to test the groupBy clause (ie: we should only group if

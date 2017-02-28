@@ -4,7 +4,7 @@ from pyspark.sql.functions import when, from_unixtime, lit
 
 class AnalyzeRequest(Analyzer):
 
-    def collect_data_from_df(self, dataframe):
+    def collect_data(self, dataframe):
         if "journeys" not in dataframe.columns:
             dataframe = dataframe.withColumn("journeys", lit(None))
 
@@ -40,11 +40,6 @@ class AnalyzeRequest(Analyzer):
                  requests_calls_row["sum(nb_without_journey)"],
                  requests_calls_row["sum(object_count)"]
                 ) for requests_calls_row in requests_calls_collection]
-
-    def get_data(self):
-        files = self.get_files_to_analyze()
-        df = self.load_data(files)
-        return self.collect_data_from_df(df)
 
     def truncate_and_insert(self, data):
         if len(data):
