@@ -6,7 +6,7 @@ class AnalyzeCoverageJourneysRequestsParams(Analyzer):
     @staticmethod
     def get_tuples_from_stat_dict(stat_dict):
         result = []
-        interpreted_parameters = stat_dict.get('interpreted_parameters', [])
+        interpreted_parameters = stat_dict.get('parameters', [])
         if not len(interpreted_parameters):
             return []
         # only keeps requests having wheelchair == true param
