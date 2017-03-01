@@ -16,15 +16,20 @@ if __name__ == "__main__":
                         required=True, type=utils.analyzer_value)
 
     args = parser.parse_args()
+    status = 'OK'
+    try:
+        database = Database(dbname=config.db["dbname"], user=config.db["user"],
+                            password=config.db["password"], schema=config.db["schema"],
+                            host=config.db['host'], port=config.db['port'],
+                            insert_count=config.db['insert_count'])
 
-    database = Database(dbname=config.db["dbname"], user=config.db["user"],
-                        password=config.db["password"], schema=config.db["schema"],
-                        host=config.db['host'], port=config.db['port'],
-                        insert_count=config.db['insert_count'])
+        logger.init_logger(config.logger.get("level", ""))
+        spark_session = SparkSession.builder.appName(__file__).getOrCreate()
 
-    logger.init_logger(config.logger.get("level", ""))
-    spark_session = SparkSession.builder.appName(__file__).getOrCreate()
-
-    analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_session, database)
-    analyzer.launch()
-    analyzer.terminate(datetime.now())
+        analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_session, database)
+        analyzer.launch()
+    except Exception as e:
+        logger.get_logger().critical("Error: {msg}".format(msg=e.message))
+        status = 'KO'
+    finally:
+        analyzer.terminate(datetime.now(), status)

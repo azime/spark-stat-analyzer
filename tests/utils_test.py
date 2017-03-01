@@ -4,7 +4,8 @@ import os
 from includes.utils import check_and_get_path, date_format, analyzer_value, sub_iterable
 from analyzers import AnalyzeTokens, AnalyseUsersSql, AnalyzeRequest, \
     AnalyzeCoverageModes, AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageJourneysTransfers, \
-    AnalyzeCoverageJourneysRequestsParams, AnalyzeCoverageJourneys, AnalyzeCoverageNetworks
+    AnalyzeCoverageJourneysRequestsParams, AnalyzeCoverageJourneys, AnalyzeCoverageNetworks, \
+    AnalyzeCoverageStartAndNetworks
 from tests.checker import same_list_tuple
 
 
@@ -40,7 +41,8 @@ def test_analyzer_valid():
               "coverage_journeys_transfers": AnalyzeCoverageJourneysTransfers,
               "coverage_journeys_requests_params": AnalyzeCoverageJourneysRequestsParams,
               "coverage_journeys": AnalyzeCoverageJourneys,
-              "coverage_networks": AnalyzeCoverageNetworks}
+              "coverage_networks": AnalyzeCoverageNetworks,
+              "coverage_start_end_networks": AnalyzeCoverageStartAndNetworks}
     for value in values:
         assert values[value] == analyzer_value(value)
 
@@ -52,7 +54,8 @@ def test_analyzer_upper_lower():
               "coverage_JOURNEYS_transfers": AnalyzeCoverageJourneysTransfers,
               "coverage_journeys_requests_PARAMS": AnalyzeCoverageJourneysRequestsParams,
               "covERAGE_journeys": AnalyzeCoverageJourneys,
-              "coverage_netWORKS": AnalyzeCoverageNetworks}
+              "coverage_netWORKS": AnalyzeCoverageNetworks,
+              "coverage_start_END_networks": AnalyzeCoverageStartAndNetworks}
     for value in values:
         assert values[value] == analyzer_value(value)
 

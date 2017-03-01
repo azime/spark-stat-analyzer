@@ -10,3 +10,4 @@ from analyzers.coverage_journeys_transfers import AnalyzeCoverageJourneysTransfe
 from analyzers.coverage_journeys import AnalyzeCoverageJourneys
 from analyzers.coverage_networks import AnalyzeCoverageNetworks
 from analyzers.coverage_lines import AnalyzeCoverageLines
+from analyzers.coverage_start_end_networks import AnalyzeCoverageStartAndNetworks
