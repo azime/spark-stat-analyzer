@@ -6,7 +6,7 @@ Base = declarative_base(metadata=MetaData(schema='stat_compiled'))
 
 
 class CoverageStartEndNetwork(Base):
-    __tablename__ = 'coverage_start_end_network'
+    __tablename__ = 'coverage_start_end_networks'
 
     region_id = Column(Text(), primary_key=True,  nullable=False)
     start_network_id = Column(Text(), primary_key=True,  nullable=False)
