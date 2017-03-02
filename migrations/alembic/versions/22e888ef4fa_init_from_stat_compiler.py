@@ -69,7 +69,6 @@ def upgrade():
                                                 'commercial_mode_name', 'is_internal_call'),
                         sa.UniqueConstraint('region_id', 'request_date', 'is_internal_call', 'type', 'mode',
                                             'commercial_mode_id', 'commercial_mode_name', name=config.db['schema'] + 'coverage_modes_pkey'),
-                        sa.Index()
                         schema=config.db['schema']
                         )
     if not context.dialect.has_table(connection.engine, table_name='coverage_networks', schema=config.db['schema']):
@@ -162,13 +161,4 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('users', schema=config.db['schema'])
-    op.drop_table('token_stats', schema=config.db['schema'])
-    op.drop_table('requests_calls', schema=config.db['schema'])
-    op.drop_table('error_stats', schema=config.db['schema'])
-    op.drop_table('coverage_stop_areas', schema=config.db['schema'])
-    op.drop_table('coverage_networks', schema=config.db['schema'])
-    op.drop_table('coverage_modes', schema=config.db['schema'])
-    op.drop_table('coverage_journeys_transfers', schema=config.db['schema'])
-    op.drop_table('coverage_journeys_requests_params', schema=config.db['schema'])
-    op.drop_table('coverage_journeys', schema=config.db['schema'])
+    pass
