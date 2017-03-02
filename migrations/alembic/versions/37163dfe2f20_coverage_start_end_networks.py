@@ -15,7 +15,7 @@ import sqlalchemy as sa
 
 def upgrade():
     op.create_table(
-        'coverage_start_end_network',
+        'coverage_start_end_networks',
         sa.Column('region_id', sa.Text(), nullable=False),
         sa.Column('start_network_id', sa.Text(), nullable=False),
         sa.Column('start_network_name', sa.Text(), nullable=False),
@@ -45,4 +45,4 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('coverage_start_end_network', schema='stat_compiled')
+    op.drop_table('coverage_start_end_networks', schema='stat_compiled')
