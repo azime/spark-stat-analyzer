@@ -7,8 +7,8 @@ class AnalyzeCoverageStartAndNetworks(Analyzer):
 
     @staticmethod
     def get_networks(stat_dict):
-        coverages = stat_dict.get("coverages", None)
-        if not coverages or not len(coverages):
+        coverages = stat_dict.get("coverages", [])
+        if not len(coverages):
             return
         journeys = stat_dict.get("journeys", [])
         if not len(journeys):
