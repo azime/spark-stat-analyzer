@@ -29,7 +29,7 @@ if __name__ == "__main__":
         analyzer = args.analyzer(args.input, args.start_date, args.end_date, spark_session, database)
         analyzer.launch()
     except Exception as e:
-        logger.get_logger().critical("Error: {msg}".format(msg=e.message))
+        logger.get_logger().critical("Error: {msg}".format(msg=str(e)))
         status = 'KO'
     finally:
         analyzer.terminate(datetime.now(), status)

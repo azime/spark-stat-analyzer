@@ -15,7 +15,7 @@ class Database(object):
             try:
                 self.connect()
             except psycopg2.OperationalError as e:
-                get_logger().critical('Cannot connect database, error: {msg}'.format(msg=e.message))
+                get_logger().critical('Cannot connect database, error: {msg}'.format(msg=str(e)))
                 raise
 
     def connect(self):
@@ -47,11 +47,11 @@ class Database(object):
             self.cursor.execute(query.format(schema_=self.schema), values)
             self.connection.commit()
         except psycopg2.Error as e:
-            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in update function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise
         except TypeError as e:
-            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in update function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise
 
@@ -72,10 +72,10 @@ class Database(object):
                     self.cursor.execute(insert_string, records)
             self.connection.commit()
         except psycopg2.Error as e:
-            get_logger().critical("Error in insert function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in insert function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise
         except TypeError as e:
-            get_logger().critical("Error in insert function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in insert function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise

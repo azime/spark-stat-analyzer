@@ -1,6 +1,5 @@
 from datetime import datetime
 from analyzers import Analyzer
-from includes.logger import get_logger
 
 
 class AnalyzeCoverageStartEndNetworks(Analyzer):
@@ -15,7 +14,7 @@ class AnalyzeCoverageStartEndNetworks(Analyzer):
             return
         for journey in journeys:
             sections = journey.get("sections", [])
-            section_public_transport = [section for section in sections if section.get("network_id", '') != '']
+            section_public_transport = [section for section in sections if section.get("network_id", '').strip()]
 
             if not len(section_public_transport):
                 continue
