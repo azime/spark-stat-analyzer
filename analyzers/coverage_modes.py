@@ -1,4 +1,3 @@
-from datetime import datetime
 from analyzers.stat_utils import region_id, is_internal_call, request_date
 from analyzers import Analyzer
 

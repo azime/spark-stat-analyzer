@@ -1,6 +1,5 @@
 from analyzers import Analyzer
 from analyzers.stat_utils import region_id, is_internal_call, request_date
-from datetime import datetime
 
 
 class AnalyzeCoverageLines(Analyzer):
@@ -63,7 +62,7 @@ class AnalyzeCoverageLines(Analyzer):
 
     def launch(self):
         coverage_lines = self.get_data(rdd_mode=True)
-        # self.truncate_and_insert(coverage_lines)
+        self.truncate_and_insert(coverage_lines)
 
     @property
     def analyzer_name(self):

@@ -1,6 +1,5 @@
 from analyzers import Analyzer
 from analyzers.stat_utils import region_id, is_internal_call, request_date
-from datetime import datetime
 
 
 class AnalyzeCoverageStopAreas(Analyzer):
