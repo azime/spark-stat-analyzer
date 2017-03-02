@@ -47,14 +47,26 @@ def test_get_networks_get_tuples_start_network_id_empty():
                 "sections": [
                     {"type": "public_transport", "network_id": ""},
                     {"type": "transfers", "network_id": ""},
-                    {"type": "public_transport", "network_id": "123"}
+                    {"type": "public_transport", "network_id": "123", "network_name": "AA"}
                 ]
             }
         ]
     }
+    expected_results = [{'end_network_name': 'AA', 'start_network_id': '123',
+                     'start_network_name': 'AA', 'end_network_id': '123'}]
 
-    assert list(AnalyzeCoverageStartAndNetworks.get_networks(data)) == []
-    assert list(AnalyzeCoverageStartAndNetworks.get_tuples_from_stat_dict(data)) == []
+    # get_network
+    result = list(AnalyzeCoverageStartAndNetworks.get_networks(data))
+
+    assert len(result) == len(expected_results)
+    assert len(result) == 1
+    assert len(set(result[0].keys()) - set(expected_results[0].keys())) == 0
+    assert len(set(result[0].values()) - set(expected_results[0].values())) == 0
+
+    #get_tuples_from_stat_dict
+    print(list(AnalyzeCoverageStartAndNetworks.get_tuples_from_stat_dict(data)))
+    assert same_list_tuple(list(AnalyzeCoverageStartAndNetworks.get_tuples_from_stat_dict(data)),
+                           [(('test', '123', 'AA', '123', 'AA', 1, date(2017, 2, 17)), 1)])
 
 
 def test_get_networks_get_tuples_end_network_id_empty():
@@ -74,8 +86,22 @@ def test_get_networks_get_tuples_end_network_id_empty():
         ]
     }
 
-    assert list(AnalyzeCoverageStartAndNetworks.get_networks(data)) == []
-    assert list(AnalyzeCoverageStartAndNetworks.get_tuples_from_stat_dict(data)) == []
+    expected_results = [{'end_network_name': 'AA', 'start_network_id': '123',
+                     'start_network_name': 'AA', 'end_network_id': '123'}]
+
+    # get_network
+    result = list(AnalyzeCoverageStartAndNetworks.get_networks(data))
+
+    assert len(result) == len(expected_results)
+    assert len(result) == 1
+    assert len(set(result[0].keys()) - set(expected_results[0].keys())) == 0
+    assert len(set(result[0].values()) - set(expected_results[0].values())) == 0
+
+    #get_tuples_from_stat_dict
+    print(list(AnalyzeCoverageStartAndNetworks.get_tuples_from_stat_dict(data)))
+    assert same_list_tuple(list(AnalyzeCoverageStartAndNetworks.get_tuples_from_stat_dict(data)),
+                           [(('test', '123', 'AA', '123', 'AA', 1, date(2017, 2, 17)), 1)])
+
 
 
 def test_get_networks_get_tuples_start_end_network_id_empty():
