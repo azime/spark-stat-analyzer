@@ -1,4 +1,5 @@
 from analyzers import Analyzer
+from analyzers.stat_utils import region_id, is_internal_call, request_date
 from datetime import datetime
 
 
@@ -26,11 +27,11 @@ class AnalyzeCoverageNetworks(Analyzer):
             lambda network:
             (
                 (
-                    stat_dict['coverages'][0]['region_id'],  # region_id
+                    region_id(stat_dict),
                     network['network_id'],
                     network['network_name'],
-                    1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
-                    datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
+                    is_internal_call(stat_dict),
+                    request_date(stat_dict)
                 ),
                 1
             ),
@@ -45,8 +46,8 @@ class AnalyzeCoverageNetworks(Analyzer):
                                   "network_name",
                                   "is_internal_call",
                                   "request_date",
-                                  "nb")
-                                 , data, self.start_date, self.end_date)
+                                  "nb"),
+                                 data, self.start_date, self.end_date)
 
     def launch(self):
         coverage_stop_areas = self.get_data(rdd_mode=True)

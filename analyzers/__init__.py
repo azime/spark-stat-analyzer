@@ -9,3 +9,4 @@ from analyzers.users_sql import AnalyseUsersSql
 from analyzers.coverage_journeys_transfers import AnalyzeCoverageJourneysTransfers
 from analyzers.coverage_journeys import AnalyzeCoverageJourneys
 from analyzers.coverage_networks import AnalyzeCoverageNetworks
+from analyzers.coverage_lines import AnalyzeCoverageLines

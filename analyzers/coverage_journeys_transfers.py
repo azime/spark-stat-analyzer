@@ -1,4 +1,5 @@
 from datetime import datetime
+from analyzers.stat_utils import region_id, is_internal_call, request_date
 from analyzers import Analyzer
 
 
@@ -17,18 +18,12 @@ class AnalyzeCoverageJourneysTransfers(Analyzer):
                 result.append(
                     (
                         (
-                            (
-                                coverages[0]['region_id'],
-                                journey.get("nb_transfers"),
-                                # is_internal_call
-                                1 if 'canaltp' in stat_dict['user_name'] else 0,
-                                # request_date
-                                datetime.utcfromtimestamp(stat_dict['request_date']).date()
-                            )
+                            region_id(stat_dict),
+                            journey.get("nb_transfers"),
+                            is_internal_call(stat_dict),
+                            request_date(stat_dict)
                         ),
-                    (
                         1
-                    )
                     )
                 )
         return result
