@@ -21,7 +21,8 @@ if __name__ == "__main__":
         database = Database(dbname=config.db["dbname"], user=config.db["user"],
                             password=config.db["password"], schema=config.db["schema"],
                             host=config.db['host'], port=config.db['port'],
-                            insert_count=config.db['insert_count'])
+                            insert_count=config.db['insert_count'],
+                            auto_connect=False)
 
         logger.init_logger(config.logger.get("level", ""))
         spark_session = SparkSession.builder.appName(__file__).getOrCreate()

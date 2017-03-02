@@ -5,7 +5,7 @@ db = dict(
     user = 'user',
     password = 'password',,
     schema = 'stat_compiled',
-    insert_count= 100,
+    insert_count= 1000,
 )
 
 logger = dict (
