@@ -3,7 +3,7 @@ from analyzers import Analyzer
 from includes.logger import get_logger
 
 
-class AnalyzeCoverageStartAndNetworks(Analyzer):
+class AnalyzeCoverageStartEndNetworks(Analyzer):
 
     @staticmethod
     def get_networks(stat_dict):
@@ -48,7 +48,7 @@ class AnalyzeCoverageStartAndNetworks(Analyzer):
                 ),
                 1
             ),
-            AnalyzeCoverageStartAndNetworks.get_networks(stat_dict)
+            AnalyzeCoverageStartEndNetworks.get_networks(stat_dict)
         )
 
     def truncate_and_insert(self, data):
@@ -65,4 +65,4 @@ class AnalyzeCoverageStartAndNetworks(Analyzer):
 
     @property
     def analyzer_name(self):
-        return "AnalyzeJourneyStartAndNetworks"
+        return "AnalyzeCoverageStartEndNetworks"
