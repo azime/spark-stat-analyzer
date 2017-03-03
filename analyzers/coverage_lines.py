@@ -5,9 +5,7 @@ from analyzers.stat_utils import region_id, is_internal_call, request_date
 class AnalyzeCoverageLines(Analyzer):
     @staticmethod
     def get_lines(stat_dict):
-        if 'journeys' not in stat_dict or not len(stat_dict['journeys']):
-            return
-        for journey in stat_dict['journeys']:
+        for journey in stat_dict.get('journeys', []):
             lines_of_journey = []
             journey_sections = journey.get('sections', [])
             for section in journey_sections:
@@ -15,11 +13,11 @@ class AnalyzeCoverageLines(Analyzer):
                     continue
 
                 line_dict = {
-                    'type': section.get('type'),
-                    'line_id': section.get('line_id'),
-                    'line_code': section.get('line_code'),
-                    'network_id': section.get('network_id'),
-                    'network_name': section.get('network_name'),
+                    'type': section.get('type', ''),
+                    'line_id': section.get('line_id', ''),
+                    'line_code': section.get('line_code', ''),
+                    'network_id': section.get('network_id', ''),
+                    'network_name': section.get('network_name', ''),
                 }
 
                 if line_dict not in lines_of_journey:
