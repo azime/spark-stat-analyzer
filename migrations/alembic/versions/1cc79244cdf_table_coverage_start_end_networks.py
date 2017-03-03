@@ -24,7 +24,7 @@ def upgrade():
         sa.Column('end_network_id', sa.Text(), nullable=False),
         sa.Column('end_network_name', sa.Text(), nullable=False),
         sa.Column('request_date', sa.DateTime(), nullable=False),
-        sa.Column('is_internal_call', sa.Boolean(), nullable=False),
+        sa.Column('is_internal_call', sa.SmallInteger(), nullable=False),
         sa.Column('nb', sa.BigInteger(), nullable=False),
         sa.PrimaryKeyConstraint('region_id', 'start_network_id', 'end_network_id', 'request_date', 'is_internal_call'),
         sa.UniqueConstraint('region_id', 'start_network_id', 'end_network_id', 'request_date', 'is_internal_call',

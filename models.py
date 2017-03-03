@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, BigInteger, UniqueConstraint, DateTime, Boolean
+from sqlalchemy import Column, Integer, Text, BigInteger, UniqueConstraint, DateTime, SmallInteger
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData
 
@@ -14,7 +14,7 @@ class CoverageStartEndNetworks(Base):
     end_network_id = Column(Text(), primary_key=True,  nullable=False)
     end_network_name = Column(Text(), primary_key=False,  nullable=False)
     request_date = Column(DateTime(), primary_key=True,  nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True,  nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True,  nullable=False)
     nb = Column(BigInteger(), primary_key=False,  nullable=False)
     __table_args__ = (
         UniqueConstraint(
@@ -41,7 +41,7 @@ class CoverageJourneys(Base):
 
     request_date = Column(DateTime(), primary_key=True, nullable=False)
     region_id = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     nb = Column(BigInteger(), primary_key=False, nullable=False)
 
     __table_args__ = (
@@ -57,7 +57,7 @@ class CoverageJourneysRequestParams(Base):
 
     request_date = Column(DateTime(), primary_key=True, nullable=False)
     region_id = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     nb_wheelchair = Column(BigInteger(), primary_key=False, nullable=False)
 
     __table_args__ = (
@@ -73,7 +73,7 @@ class CoverageJourneysTransfers(Base):
 
     request_date = Column(DateTime(), primary_key=True, nullable=False)
     region_id = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     nb_transfers = Column(BigInteger(), primary_key=True, nullable=False)
     nb = Column(BigInteger(), primary_key=False)
 
@@ -94,7 +94,7 @@ class CoverageModes(Base):
     mode = Column(Text(), primary_key=True, nullable=False)
     commercial_mode_id = Column(Text(), primary_key=True, nullable=False)
     commercial_mode_name = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     nb = Column(BigInteger(), primary_key=False)
 
     __table_args__ = (
@@ -113,7 +113,7 @@ class CoverageNetworks(Base):
     region_id = Column(Text(), primary_key=True, nullable=False)
     network_id = Column(Text(), primary_key=True, nullable=False)
     network_name = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     nb = Column(BigInteger(), primary_key=False)
 
     __table_args__ = (
@@ -135,7 +135,7 @@ class CoverageStopAreas(Base):
     city_name = Column(Text(), primary_key=True, nullable=False)
     city_insee = Column(Text(), primary_key=True, nullable=False)
     department_code = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     nb = Column(BigInteger(), primary_key=True)
 
     __table_args__ = (
@@ -154,7 +154,7 @@ class ErrorStats(Base):
     api = Column(Text(), primary_key=True, nullable=False)
     user_id = Column(Integer(), primary_key=True, nullable=False)
     app_name = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     request_date = Column(DateTime(), primary_key=True, nullable=False)
     err_id = Column(Text(), primary_key=True, nullable=False)
     nb_req = Column(BigInteger(), primary_key=False)
@@ -175,7 +175,7 @@ class RequestsCalls(Base):
     api = Column(Text(), primary_key=True, nullable=False)
     user_id = Column(Integer(), primary_key=True, nullable=False)
     app_name = Column(Text(), primary_key=True, nullable=False)
-    is_internal_call = Column(Boolean(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
     request_date = Column(DateTime(), primary_key=True, nullable=False)
     end_point_id = Column(Integer(), primary_key=True, nullable=False)
     nb = Column(BigInteger(), primary_key=False)
