@@ -34,7 +34,8 @@ def upgrade():
     schema='stat_compiled'
     )
 
-    op.execute(get_create_partition_sql_func(config.db['schema'], table_name));
+    op.execute(get_create_partition_sql_func(config.db['schema'], table_name))
+
 
 def downgrade():
     op.drop_table('coverage_lines', schema='stat_compiled')
