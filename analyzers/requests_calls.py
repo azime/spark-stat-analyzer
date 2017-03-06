@@ -49,8 +49,8 @@ class AnalyzeRequest(Analyzer):
                                  end_date=self.end_date)
 
     def launch(self):
-        token_stats = self.get_data()
-        self.truncate_and_insert(token_stats)
+        requests_calls = self.get_data()
+        self.truncate_and_insert(requests_calls)
 
     @property
     def analyzer_name(self):

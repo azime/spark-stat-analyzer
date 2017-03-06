@@ -32,8 +32,8 @@ class AnalyzeCoverageJourneysRequestsParams(Analyzer):
             )
 
     def launch(self):
-        wheelchair_stats = self.get_data(rdd_mode=True)
-        self.truncate_and_insert(wheelchair_stats)
+        coverage_journeys_requests_params = self.get_data(rdd_mode=True)
+        self.truncate_and_insert(coverage_journeys_requests_params)
 
     @property
     def analyzer_name(self):

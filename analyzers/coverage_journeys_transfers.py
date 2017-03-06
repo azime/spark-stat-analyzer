@@ -41,8 +41,8 @@ class AnalyzeCoverageJourneysTransfers(Analyzer):
                                  end_date=self.end_date)
 
     def launch(self):
-        coverage_modes = self.get_data()
-        self.truncate_and_insert(coverage_modes)
+        coverage_journeys_transfers = self.get_data(rdd_mode=True)
+        self.truncate_and_insert(coverage_journeys_transfers)
 
     @property
     def analyzer_name(self):
