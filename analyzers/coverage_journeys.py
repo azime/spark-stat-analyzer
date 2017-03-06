@@ -30,8 +30,8 @@ class AnalyzeCoverageJourneys(Analyzer):
             )
 
     def launch(self):
-        journeys_stats = self.get_data(rdd_mode=True)
-        self.truncate_and_insert(journeys_stats)
+        coverage_journeys = self.get_data(rdd_mode=True)
+        self.truncate_and_insert(coverage_journeys)
 
     @property
     def analyzer_name(self):

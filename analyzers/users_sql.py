@@ -43,8 +43,8 @@ class AnalyseUsersSql(Analyzer):
                                  delete=False)
 
     def launch(self):
-        token_stats = self.get_data()
-        self.insert_or_update(token_stats)
+        users = self.get_data()
+        self.insert_or_update(users)
 
     @property
     def analyzer_name(self):
