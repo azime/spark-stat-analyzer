@@ -1,6 +1,5 @@
-from datetime import datetime
 from analyzers import Analyzer
-from stat_utils import is_internal_call, region_id, request_date
+from analyzers.stat_utils import is_internal_call, region_id, request_date
 
 
 class AnalyzeCoverageStartEndNetworks(Analyzer):
