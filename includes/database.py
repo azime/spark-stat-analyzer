@@ -8,14 +8,14 @@ class Database(object):
         self.connection_string = "host='{host}' port='{port}' dbname='{dbname}' user='{user}' password='{password}'".\
             format(host=host, port=port, dbname=dbname, user=user, password=password)
         self.schema = kwargs.get("schema", "stat_compiled")
-        self.insert_count = kwargs.get("insert_count", 100)
+        self.insert_count = kwargs.get("insert_count", 1000)
         self.connection = None
         self.cursor = None
         if auto_connect:
             try:
                 self.connect()
             except psycopg2.OperationalError as e:
-                get_logger().critical('Cannot connect database, error: {msg}'.format(msg=e.message))
+                get_logger().critical('Cannot connect database, error: {msg}'.format(msg=str(e)))
                 raise
 
     def connect(self):
@@ -36,6 +36,7 @@ class Database(object):
                                                                                      schema_=self.schema)
 
     def select_from_table(self, table_name, columns, **where):
+        self.connect()
         query = "SELECT {columns} FROM {schema_}.{table_name}".format(columns=",".join(columns),
                                                                       table_name=table_name,
                                                                       schema_=self.schema)
@@ -44,19 +45,21 @@ class Database(object):
 
     def update(self, query, values):
         try:
+            self.connect()
             self.cursor.execute(query.format(schema_=self.schema), values)
             self.connection.commit()
         except psycopg2.Error as e:
-            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in update function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise
         except TypeError as e:
-            get_logger().critical("Error in update function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in update function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise
 
     def insert(self, table_name, columns, data, start_date=None, end_date=None, delete=True):
         try:
+            self.connect()
             if delete:
                 query = self.format_delete_query(table_name, start_date, end_date)
                 self.cursor.execute(query)
@@ -72,10 +75,10 @@ class Database(object):
                     self.cursor.execute(insert_string, records)
             self.connection.commit()
         except psycopg2.Error as e:
-            get_logger().critical("Error in insert function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in insert function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise
         except TypeError as e:
-            get_logger().critical("Error in insert function: {msg}".format(msg=e.message))
+            get_logger().critical("Error in insert function: {msg}".format(msg=str(e)))
             self.connection.rollback()
             raise

@@ -66,12 +66,12 @@ class Analyzer(object):
         else:
             return self.spark_session.read.json(files)
 
-    def get_log_analyzer_stats(self, current_datetime):
-        return "[OK] [%s] [%s] [%s] [%d]" %(current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
+    def get_log_analyzer_stats(self, current_datetime, status='OK'):
+        return "[%s] [%s] [%s] [%s] [%d]" %(status, current_datetime.strftime("%Y-%m-%d %H:%M:%S"),
                                             self.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                                             self.analyzer_name,
                                             math.floor((current_datetime - self.created_at).total_seconds()))
 
-    def terminate(self, current_datetime):
+    def terminate(self, current_datetime, status='OK'):
         self.spark_session.sparkContext.stop()
-        get_logger().info(self.get_log_analyzer_stats(current_datetime))
+        get_logger().info(self.get_log_analyzer_stats(current_datetime, status))

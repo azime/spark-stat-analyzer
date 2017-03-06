@@ -4,8 +4,24 @@ import os
 from includes.utils import check_and_get_path, date_format, analyzer_value, sub_iterable
 from analyzers import AnalyzeTokens, AnalyseUsersSql, AnalyzeRequest, \
     AnalyzeCoverageModes, AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageJourneysTransfers, \
-    AnalyzeCoverageJourneysRequestsParams, AnalyzeCoverageJourneys, AnalyzeCoverageNetworks
+    AnalyzeCoverageJourneysRequestsParams, AnalyzeCoverageJourneys, AnalyzeCoverageNetworks, \
+    AnalyzeCoverageStartEndNetworks
 from tests.checker import same_list_tuple
+
+
+dict_analyzer = {
+    "token_stats": AnalyzeTokens,
+    "users": AnalyseUsersSql,
+    "requests_calls": AnalyzeRequest,
+    "error_stats": AnalyzeErrors,
+    "coverage_stop_areas": AnalyzeCoverageStopAreas,
+    "coverage_modes": AnalyzeCoverageModes,
+    "coverage_journeys_transfers": AnalyzeCoverageJourneysTransfers,
+    "coverage_journeys_requests_params": AnalyzeCoverageJourneysRequestsParams,
+    "coverage_journeys": AnalyzeCoverageJourneys,
+    "coverage_networks": AnalyzeCoverageNetworks,
+    "coverage_start_end_networks": AnalyzeCoverageStartEndNetworks
+}
 
 
 def test_path_invalid():
@@ -34,27 +50,13 @@ def test_option_invalid():
 
 
 def test_analyzer_valid():
-    values = {"token_stats": AnalyzeTokens, "users": AnalyseUsersSql, "requests_calls": AnalyzeRequest,
-              "error_stats": AnalyzeErrors, "coverage_stop_areas": AnalyzeCoverageStopAreas,
-              "coverage_modes": AnalyzeCoverageModes,
-              "coverage_journeys_transfers": AnalyzeCoverageJourneysTransfers,
-              "coverage_journeys_requests_params": AnalyzeCoverageJourneysRequestsParams,
-              "coverage_journeys": AnalyzeCoverageJourneys,
-              "coverage_networks": AnalyzeCoverageNetworks}
-    for value in values:
-        assert values[value] == analyzer_value(value)
+    for value in dict_analyzer:
+        assert dict_analyzer[value] == analyzer_value(value)
 
 
 def test_analyzer_upper_lower():
-    values = {"TOKEN_stats": AnalyzeTokens, "USERS": AnalyseUsersSql, "requests_CALLS": AnalyzeRequest,
-              "ERROR_stats": AnalyzeErrors, "coverage_STOP_areas": AnalyzeCoverageStopAreas,
-              "coverage_MODES": AnalyzeCoverageModes,
-              "coverage_JOURNEYS_transfers": AnalyzeCoverageJourneysTransfers,
-              "coverage_journeys_requests_PARAMS": AnalyzeCoverageJourneysRequestsParams,
-              "covERAGE_journeys": AnalyzeCoverageJourneys,
-              "coverage_netWORKS": AnalyzeCoverageNetworks}
-    for value in values:
-        assert values[value] == analyzer_value(value)
+    for value in dict_analyzer:
+        assert dict_analyzer[value] == analyzer_value(value.upper())
 
 
 def test_sub_iterable_empty():

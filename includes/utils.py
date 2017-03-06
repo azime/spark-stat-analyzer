@@ -3,7 +3,7 @@ from datetime import datetime
 from analyzers import AnalyseUsersSql, AnalyzeTokens, AnalyzeRequest,\
     AnalyzeErrors, AnalyzeCoverageStopAreas, AnalyzeCoverageModes, AnalyzeCoverageJourneysTransfers,\
     AnalyzeCoverageJourneysRequestsParams, AnalyzeCoverageNetworks, AnalyzeCoverageJourneys,\
-    AnalyzeCoverageLines
+    AnalyzeCoverageLines, AnalyzeCoverageStartEndNetworks
 from itertools import chain, islice
 
 
@@ -19,7 +19,8 @@ def analyzer_value(value):
         "coverage_journeys_requests_params": AnalyzeCoverageJourneysRequestsParams,
         "coverage_journeys": AnalyzeCoverageJourneys,
         "coverage_networks": AnalyzeCoverageNetworks,
-        "coverage_lines": AnalyzeCoverageLines
+        "coverage_lines": AnalyzeCoverageLines,
+        "coverage_start_end_networks": AnalyzeCoverageStartEndNetworks
     }
     lower_value = value.lower()
     if lower_value not in analyzers:
