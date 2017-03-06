@@ -205,3 +205,22 @@ class TokenStats(Base):
         ),
     )
 
+class CoverageLines(Base):
+    __tablename__ = 'coverage_lines'
+
+    request_date = Column(DateTime(), primary_key=True, nullable=False)
+    region_id = Column(Text(), primary_key=True, nullable=False)
+    type = Column(Text(), primary_key=True, nullable=False)
+    line_id = Column(Text(), primary_key=True, nullable=False)
+    line_code = Column(Text(), primary_key=True, nullable=False)
+    network_id = Column(Text(), primary_key=True, nullable=False)
+    network_name = Column(Text(), primary_key=True, nullable=False)
+    is_internal_call = Column(SmallInteger(), primary_key=True, nullable=False)
+    nb = Column(BigInteger(), primary_key=False)
+
+    __table_args__ = (
+        UniqueConstraint(
+            'request_date', 'region_id', 'type', 'line_id', 'line_code', 'network_id', 'network_name', 'is_internal_call',
+            name='coverage_lines_pkey'
+        ),
+    )

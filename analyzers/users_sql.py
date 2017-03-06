@@ -9,9 +9,9 @@ class AnalyseUsersSql(Analyzer):
 
     def collect_data(self, dataframe):
         if dataframe.count():
-            parition_by_user_id = Window.partitionBy("user_id")
-            wasc = parition_by_user_id.orderBy("request_date")
-            wdesc = parition_by_user_id.orderBy(desc("request_date"))
+            partition_by_user_id = Window.partitionBy("user_id")
+            wasc = partition_by_user_id.orderBy("request_date")
+            wdesc = partition_by_user_id.orderBy(desc("request_date"))
 
             new_users = dataframe \
                 .select(

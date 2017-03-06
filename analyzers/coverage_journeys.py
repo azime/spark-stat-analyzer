@@ -1,5 +1,5 @@
 from analyzers.analyzer import Analyzer
-from datetime import datetime
+from analyzers.stat_utils import region_id, is_internal_call, request_date
 
 
 class AnalyzeCoverageJourneys(Analyzer):
@@ -11,9 +11,9 @@ class AnalyzeCoverageJourneys(Analyzer):
         return [
             (
                 (
-                    datetime.utcfromtimestamp(stat_dict['request_date']).date(),
-                    stat_dict['coverages'][0]['region_id'],
-                    1 if 'canaltp' in stat_dict['user_name'] else 0 # is_internal_call
+                    request_date(stat_dict),
+                    region_id(stat_dict),
+                    is_internal_call(stat_dict)
                 ),
                 len(journeys)
             )

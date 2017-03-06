@@ -1,5 +1,5 @@
 from analyzers import Analyzer
-from datetime import datetime
+from analyzers.stat_utils import region_id, is_internal_call, request_date
 
 
 class AnalyzeCoverageStopAreas(Analyzer):
@@ -39,15 +39,15 @@ class AnalyzeCoverageStopAreas(Analyzer):
             lambda stop_area:
             (
                 (
-                    stat_dict['coverages'][0]['region_id'],
+                    region_id(stat_dict),
                     stop_area['stop_area_id'],
                     stop_area['stop_area_name'],
                     stop_area['city_id'],
                     stop_area['city_name'],
                     stop_area['city_insee'],
                     stop_area['department_code'],
-                    1 if 'canaltp' in stat_dict['user_name'] else 0,  # is_internal_call
-                    datetime.utcfromtimestamp(stat_dict['request_date']).date(),  # request_date
+                    is_internal_call(stat_dict),
+                    request_date(stat_dict)
                 ),
                 1
             ),
@@ -66,8 +66,8 @@ class AnalyzeCoverageStopAreas(Analyzer):
                                   "department_code",
                                   "is_internal_call",
                                   "request_date",
-                                  "nb")
-                                 , data, self.start_date, self.end_date)
+                                  "nb"),
+                                 data, self.start_date, self.end_date)
 
     def launch(self):
         coverage_stop_areas = self.get_data(rdd_mode=True)
