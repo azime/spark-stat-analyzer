@@ -64,7 +64,6 @@ def test_get_networks_get_tuples_start_network_id_empty():
     assert len(set(result[0].values()) - set(expected_results[0].values())) == 0
 
     #get_tuples_from_stat_dict
-    print(list(AnalyzeCoverageStartEndNetworks.get_tuples_from_stat_dict(data)))
     assert same_list_tuple(list(AnalyzeCoverageStartEndNetworks.get_tuples_from_stat_dict(data)),
                            [(('test', '123', 'AA', '123', 'AA', 1, date(2017, 2, 17)), 1)])
 
@@ -98,10 +97,8 @@ def test_get_networks_get_tuples_end_network_id_empty():
     assert len(set(result[0].values()) - set(expected_results[0].values())) == 0
 
     #get_tuples_from_stat_dict
-    print(list(AnalyzeCoverageStartEndNetworks.get_tuples_from_stat_dict(data)))
     assert same_list_tuple(list(AnalyzeCoverageStartEndNetworks.get_tuples_from_stat_dict(data)),
                            [(('test', '123', 'AA', '123', 'AA', 1, date(2017, 2, 17)), 1)])
-
 
 
 def test_get_networks_get_tuples_start_end_network_id_empty():
