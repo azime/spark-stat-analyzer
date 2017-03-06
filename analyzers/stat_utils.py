@@ -1,6 +1,8 @@
 from datetime import datetime
 
 
+# these functions are not performing any check so any missing
+# information from the source file will produce an error
 def region_id(stat_dict):
     return stat_dict['coverages'][0]['region_id']
 

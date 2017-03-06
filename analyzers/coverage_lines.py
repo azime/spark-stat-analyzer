@@ -13,8 +13,8 @@ class AnalyzeCoverageLines(Analyzer):
                     continue
 
                 line_dict = {
-                    'type': section.get('type', ''),
-                    'line_id': section.get('line_id', ''),
+                    'type': section.get('type'),
+                    'line_id': section.get('line_id'),
                     'line_code': section.get('line_code', ''),
                     'network_id': section.get('network_id', ''),
                     'network_name': section.get('network_name', ''),

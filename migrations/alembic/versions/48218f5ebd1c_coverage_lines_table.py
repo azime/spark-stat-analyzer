@@ -11,11 +11,12 @@ revision = '48218f5ebd1c'
 down_revision = '1cc79244cdf'
 
 from alembic import op
+from migrations.utils import get_create_partition_sql_func, get_drop_partition_sql_func
 import sqlalchemy as sa
 import geoalchemy2 as ga
 import config
 
-table_name = 'coverage_journeys'
+table_name = 'coverage_lines'
 
 
 def upgrade():
@@ -30,10 +31,12 @@ def upgrade():
     sa.Column('is_internal_call', sa.SmallInteger(), nullable=False),
     sa.Column('nb', sa.BigInteger(), nullable=True),
     sa.PrimaryKeyConstraint('request_date', 'region_id', 'type', 'line_id', 'line_code', 'network_id', 'network_name', 'is_internal_call'),
-    sa.UniqueConstraint('request_date', 'region_id', 'type', 'line_id', 'line_code', 'network_id', 'network_name', 'is_internal_call', 'nb', name='{schema}_{table}coverage_journeys_pkey'.format(schema=config.db['schema'], table=table_name)),
+    sa.UniqueConstraint('request_date', 'region_id', 'type', 'line_id', 'line_code', 'network_id', 'network_name', 'is_internal_call', name='{schema}_{table}_pkey'.format(schema=config.db['schema'], table=table_name)),
     schema='stat_compiled'
     )
 
+    op.execute(get_create_partition_sql_func(config.db['schema'], table_name));
 
 def downgrade():
     op.drop_table('coverage_lines', schema='stat_compiled')
+    op.execute(get_drop_partition_sql_func(table_name))
