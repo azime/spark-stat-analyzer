@@ -13,7 +13,6 @@ down_revision = '1cc79244cdf'
 from alembic import op
 from migrations.utils import get_create_partition_sql_func, get_drop_partition_sql_func
 import sqlalchemy as sa
-import geoalchemy2 as ga
 import config
 
 table_name = 'coverage_lines'
