@@ -11,7 +11,8 @@ revision = '48218f5ebd1c'
 down_revision = '1cc79244cdf'
 
 from alembic import op
-from migrations.utils import get_create_partition_sql_func, get_drop_partition_sql_func
+from migrations.utils import get_create_partition_sql_func, get_drop_partition_sql_func, \
+                             get_create_trigger_sql
 import sqlalchemy as sa
 import config
 
@@ -35,6 +36,7 @@ def upgrade():
     )
 
     op.execute(get_create_partition_sql_func(config.db['schema'], table_name))
+    op.execute(get_create_trigger_sql(config.db['schema'], table_name))
 
 
 def downgrade():

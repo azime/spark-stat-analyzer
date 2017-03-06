@@ -28,3 +28,11 @@ def get_create_partition_sql_func(schema, table):
 
 def get_drop_partition_sql_func(table):
     return "DROP FUNCTION IF EXISTS {}_insert_trigger();".format(table)
+
+
+def get_create_trigger_sql(schema, table):
+    return """
+        CREATE TRIGGER insert_{table}_trigger
+            BEFORE INSERT ON {schema}.{table}
+            FOR EACH ROW EXECUTE PROCEDURE {table}_insert_trigger();
+        """.format(table=table, schema=schema)
