@@ -1,5 +1,6 @@
 from datetime import datetime
 from analyzers import Analyzer
+from stat_utils import is_internal_call, region_id, request_date
 
 
 class AnalyzeCoverageStartEndNetworks(Analyzer):
@@ -35,15 +36,13 @@ class AnalyzeCoverageStartEndNetworks(Analyzer):
             lambda network:
             (
                 (
-                    stat_dict['coverages'][0]['region_id'],  # region_id
+                    region_id(stat_dict),
                     network.get("start_network_id"),
                     network.get("start_network_name"),
                     network.get("end_network_id"),
                     network.get("end_network_name"),
-                    # is_internal_call
-                    1 if 'canaltp' in stat_dict['user_name'] else 0,
-                    # request_date
-                    datetime.utcfromtimestamp(stat_dict['request_date']).date()
+                    is_internal_call(stat_dict),
+                    request_date(stat_dict)
                 ),
                 1
             ),
