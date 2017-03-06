@@ -33,12 +33,12 @@ class Analyzer(object):
 
     def collect_data(self, dataframe):
         if dataframe.count():
-            coverage_modes = dataframe.flatMap(
+            data = dataframe.flatMap(
                 self.get_tuples_from_stat_dict
             ).reduceByKey(
                 lambda a, b: a + b
             ).collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in coverage_modes]
+            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in data]
         else:
             return []
 

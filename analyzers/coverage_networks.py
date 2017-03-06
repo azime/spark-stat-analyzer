@@ -49,8 +49,8 @@ class AnalyzeCoverageNetworks(Analyzer):
                                  , data, self.start_date, self.end_date)
 
     def launch(self):
-        coverage_stop_areas = self.get_data(rdd_mode=True)
-        self.truncate_and_insert(coverage_stop_areas)
+        coverage_networks = self.get_data(rdd_mode=True)
+        self.truncate_and_insert(coverage_networks)
 
     @property
     def analyzer_name(self):
