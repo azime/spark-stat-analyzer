@@ -18,9 +18,18 @@ fi
 
 popd
 
-#echo 'Run analyzer: '${TABLE}
+echo 'Run analyzer: '${TABLE}
 
-usr/local/spark/bin/spark-submit --conf spark.ui.showConsoleProgress=true --master='local[8]' manage.py -i /home/azime/statistics/spark-stat-analyzer/tests/fixtures/coverage_modes -a coverage_modes -s 2017-02-22 -e 2017-02-22
+${SPARK_BIN}spark-submit \
+    --py-files spark-stat-analyzer.zip \
+    --conf spark.ui.showConsoleProgress=true \
+    --master $MASTER_OPTION \
+    --driver-java-options '-Duser.timezone=UTC' \
+    manage.py \
+    -a ${TABLE} \
+    -i $CONTAINER_STORE_PATH \
+    -s $START_DATE \
+    -e $END_DATE
 
 RESULT=$?
 
