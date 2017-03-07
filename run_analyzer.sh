@@ -20,6 +20,10 @@ popd
 
 echo 'Run analyzer: '${TABLE}
 
+YESTERDAY_DATE=`date --date="yesterday" +%Y-%m-%d`
+START_DATE=${START_DATE:-$YESTERDAY_DATE}
+END_DATE=${END_DATE:-$YESTERDAY_DATE}
+
 ${SPARK_BIN}spark-submit \
     --py-files spark-stat-analyzer.zip \
     --conf spark.ui.showConsoleProgress=true \
