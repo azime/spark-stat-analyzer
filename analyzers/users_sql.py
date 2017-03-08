@@ -16,7 +16,7 @@ class AnalyseUsersSql(Analyzer):
             new_users = dataframe \
                 .select(
                     "user_id",
-                    first('user_name').over(wdesc).alias('last_user_name'),
+                    first('user_name').over(wdesc).alias('user_name'),
                     first('request_date').over(wasc).alias('first_date')
                 ) \
                 .distinct()
@@ -29,13 +29,15 @@ class AnalyseUsersSql(Analyzer):
     def insert_or_update(self, data):
         users_in_database = dict(self.database.select_from_table("users", ["id", "user_name"]))
         insert_values = []
+
         for d in data:
+            user_date_first_request = datetime.utcfromtimestamp(d.first_date)
+
             if d.user_id in users_in_database:
-                if d.last_user_name != users_in_database[d.user_id]:
-                    self.database.update("UPDATE {schema_}.users SET user_name=%s WHERE id=%s;",
-                                         (d.last_user_name, d.user_id))
+                self.database.update("UPDATE {schema_}.users SET user_name=%s, date_first_request=LEAST(date_first_request, %s) WHERE id=%s;",
+                                     (d.user_name, user_date_first_request, d.user_id))
             else:
-                insert_values.append((d.user_id, d.last_user_name, datetime.utcfromtimestamp(d.first_date)))
+                insert_values.append((d.user_id, d.user_name, user_date_first_request))
         if len(insert_values):
             self.database.insert(table_name="users",
                                  columns=("id", "user_name", "date_first_request"),
