@@ -20,14 +20,13 @@ class AnalyzeCoverageJourneys(Analyzer):
         ]
 
     def truncate_and_insert(self, data):
-        if len(data):
-            self.database.insert(
-                "coverage_journeys",
-                ("request_date", "region_id", "is_internal_call", "nb"),
-                data,
-                self.start_date,
-                self.end_date
-            )
+        self.database.insert(
+            "coverage_journeys",
+            ("request_date", "region_id", "is_internal_call", "nb"),
+            data,
+            self.start_date,
+            self.end_date
+        )
 
     def launch(self):
         coverage_journeys = self.get_data(rdd_mode=True)

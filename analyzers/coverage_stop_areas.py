@@ -55,19 +55,18 @@ class AnalyzeCoverageStopAreas(Analyzer):
         )
 
     def truncate_and_insert(self, data):
-        if len(data):
-            self.database.insert("coverage_stop_areas",
-                                 ("region_id",
-                                  "stop_area_id",
-                                  "stop_area_name",
-                                  "city_id",
-                                  "city_name",
-                                  "city_insee",
-                                  "department_code",
-                                  "is_internal_call",
-                                  "request_date",
-                                  "nb"),
-                                 data, self.start_date, self.end_date)
+        self.database.insert("coverage_stop_areas",
+                             ("region_id",
+                              "stop_area_id",
+                              "stop_area_name",
+                              "city_id",
+                              "city_name",
+                              "city_insee",
+                              "department_code",
+                              "is_internal_call",
+                              "request_date",
+                              "nb"),
+                             data, self.start_date, self.end_date)
 
     def launch(self):
         coverage_stop_areas = self.get_data(rdd_mode=True)

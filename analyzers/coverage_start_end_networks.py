@@ -49,12 +49,11 @@ class AnalyzeCoverageStartEndNetworks(Analyzer):
         )
 
     def truncate_and_insert(self, data):
-        if len(data):
-            columns = ('region_id', 'start_network_id', 'start_network_name',
-                       'end_network_id', 'end_network_name', 'is_internal_call', "request_date", 'nb')
-            self.database.insert(table_name="coverage_start_end_networks", columns=columns, data=data,
-                                 start_date=self.start_date,
-                                 end_date=self.end_date)
+        columns = ('region_id', 'start_network_id', 'start_network_name',
+                   'end_network_id', 'end_network_name', 'is_internal_call', "request_date", 'nb')
+        self.database.insert(table_name="coverage_start_end_networks", columns=columns, data=data,
+                             start_date=self.start_date,
+                             end_date=self.end_date)
 
     def launch(self):
         networks = self.get_data(rdd_mode=True)

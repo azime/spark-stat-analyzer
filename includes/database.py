@@ -58,6 +58,8 @@ class Database(object):
             raise
 
     def insert(self, table_name, columns, data, start_date=None, end_date=None, delete=True):
+        if not len(data):
+            return
         try:
             self.connect()
             if delete:

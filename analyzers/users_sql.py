@@ -34,15 +34,16 @@ class AnalyseUsersSql(Analyzer):
             user_date_first_request = datetime.utcfromtimestamp(d.first_date)
 
             if d.user_id in users_in_database:
-                self.database.update("UPDATE {schema_}.users SET user_name=%s, date_first_request=LEAST(date_first_request, %s) WHERE id=%s;",
+                self.database.update("UPDATE {schema_}.users SET user_name=%s, "
+                                     "date_first_request=LEAST(date_first_request, %s) WHERE id=%s;",
                                      (d.user_name, user_date_first_request, d.user_id))
             else:
                 insert_values.append((d.user_id, d.user_name, user_date_first_request))
-        if len(insert_values):
-            self.database.insert(table_name="users",
-                                 columns=("id", "user_name", "date_first_request"),
-                                 data=insert_values,
-                                 delete=False)
+
+        self.database.insert(table_name="users",
+                             columns=("id", "user_name", "date_first_request"),
+                             data=insert_values,
+                             delete=False)
 
     def launch(self):
         users = self.get_data()

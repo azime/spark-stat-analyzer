@@ -38,15 +38,14 @@ class AnalyzeCoverageNetworks(Analyzer):
         )
 
     def truncate_and_insert(self, data):
-        if len(data):
-            self.database.insert("coverage_networks",
-                                 ("region_id",
-                                  "network_id",
-                                  "network_name",
-                                  "is_internal_call",
-                                  "request_date",
-                                  "nb"),
-                                 data, self.start_date, self.end_date)
+        self.database.insert("coverage_networks",
+                             ("region_id",
+                              "network_id",
+                              "network_name",
+                              "is_internal_call",
+                              "request_date",
+                              "nb"),
+                             data, self.start_date, self.end_date)
 
     def launch(self):
         coverage_networks = self.get_data(rdd_mode=True)

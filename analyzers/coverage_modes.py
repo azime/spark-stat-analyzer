@@ -47,12 +47,11 @@ class AnalyzeCoverageModes(Analyzer):
         )
 
     def truncate_and_insert(self, data):
-        if len(data):
-            columns = ('region_id', 'type', 'mode', 'commercial_mode_id', 'commercial_mode_name',
-                       'is_internal_call', "request_date", 'nb')
-            self.database.insert(table_name="coverage_modes", columns=columns, data=data,
-                                 start_date=self.start_date,
-                                 end_date=self.end_date)
+        columns = ('region_id', 'type', 'mode', 'commercial_mode_id', 'commercial_mode_name',
+                   'is_internal_call', "request_date", 'nb')
+        self.database.insert(table_name="coverage_modes", columns=columns, data=data,
+                             start_date=self.start_date,
+                             end_date=self.end_date)
 
     def launch(self):
         coverage_modes = self.get_data(rdd_mode=True)

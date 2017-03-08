@@ -20,12 +20,11 @@ class AnalyzeErrors(Analyzer):
             .collect()
 
     def truncate_and_insert(self, data):
-        if len(data):
-            columns = ('region_id', 'api', 'request_date', 'user_id', 'app_name', 'err_id',
-                       'is_internal_call', 'nb_req')
-            self.database.insert(table_name="error_stats", columns=columns, data=data,
-                                 start_date=self.start_date,
-                                 end_date=self.end_date)
+        columns = ('region_id', 'api', 'request_date', 'user_id', 'app_name', 'err_id',
+                   'is_internal_call', 'nb_req')
+        self.database.insert(table_name="error_stats", columns=columns, data=data,
+                             start_date=self.start_date,
+                             end_date=self.end_date)
 
     def launch(self):
         error_stats = self.get_data()
