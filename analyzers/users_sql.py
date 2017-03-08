@@ -36,11 +36,10 @@ class AnalyseUsersSql(Analyzer):
                                          (d.last_user_name, d.user_id))
             else:
                 insert_values.append((d.user_id, d.last_user_name, datetime.utcfromtimestamp(d.first_date)))
-        if len(insert_values):
-            self.database.insert(table_name="users",
-                                 columns=("id", "user_name", "date_first_request"),
-                                 data=insert_values,
-                                 delete=False)
+        self.database.insert(table_name="users",
+                             columns=("id", "user_name", "date_first_request"),
+                             data=insert_values,
+                             delete=False)
 
     def launch(self):
         users = self.get_data()

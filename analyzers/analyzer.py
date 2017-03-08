@@ -32,15 +32,12 @@ class Analyzer(object):
         pass
 
     def collect_data(self, dataframe):
-        if dataframe.count():
-            data = dataframe.flatMap(
-                self.get_tuples_from_stat_dict
-            ).reduceByKey(
-                lambda a, b: a + b
-            ).collect()
-            return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in data]
-        else:
-            return []
+        data = dataframe.flatMap(
+            self.get_tuples_from_stat_dict
+        ).reduceByKey(
+            lambda a, b: a + b
+        ).collect()
+        return [tuple(list(key_tuple) + [nb]) for (key_tuple, nb) in data]
 
     def get_data(self, rdd_mode=False, separator=','):
         files = self.get_files_to_analyze()

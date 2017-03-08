@@ -22,14 +22,13 @@ class AnalyzeCoverageJourneysRequestsParams(Analyzer):
         return map(lambda s: (s, 1), result)
 
     def truncate_and_insert(self, data):
-        if len(data):
-            self.database.insert(
-                "coverage_journeys_requests_params",
-                ("request_date", "region_id", "is_internal_call", "nb_wheelchair"),
-                data,
-                self.start_date,
-                self.end_date
-            )
+        self.database.insert(
+            "coverage_journeys_requests_params",
+            ("request_date", "region_id", "is_internal_call", "nb_wheelchair"),
+            data,
+            self.start_date,
+            self.end_date
+        )
 
     def launch(self):
         wheelchair_stats = self.get_data(rdd_mode=True)
